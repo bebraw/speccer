@@ -11,16 +11,17 @@ from processor import SpecificationProcessor
 class SpecificationRunner:
     def run(self, py_files):
         for py_file in py_files:
-            spec_file = os.path.splitext(py_file)[0] + '.spec'
+            py_file_name = os.path.splitext(py_file)[0]
+            spec_file = py_file_name + '.spec'
 
             if os.path.exists(spec_file):
-                processor = SpecificationProcessor()
+                processor = SpecificationProcessor(py_file_name)
 
                 with open(spec_file) as f:
                     lines = f.readlines()
 
-                # TODO: set up imports!
                 spec_code = processor.process(lines)
+                #print spec_code
 
                 # http://docs.python.org/library/tempfile.html#tempfile.mktemp
                 tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.py')
@@ -49,36 +50,7 @@ class SpecificationRunner:
 
                 set_up = spec_funcs.get('set_up')
                 for name, func in spec_funcs.items():
-                    if name != 'set_up':
-                        if set_up:
-                            func(set_up()) # XXX: mod generated funcs to accept **kvargs
-                        else:
-                            func()
-
-                # module_classes = inspect.getmembers(module, inspect.isclass)
-
-                #spec_source = compile(spec_code, '<string>', 'exec')
-                #exec(spec_source)
-
-                specs = {}
-
-                for k, v in specs.items():
-                    if k != 'set up':
-                        if ' raises ' in v:
-                            test_code, exc = v.split(' raises ')
-
-                            try:
-                                self.run_test(set_up, module_name, module, test_code)
-                            except eval(exc):
-                                pass
-                        else:
-                            self.run_test(set_up, module_name, module, v)
-
-    def run_test(self, set_up, module_name, module, test_code):
-        # TODO: replace this with something nicer :) (ie. expecter or specs)
-        test = set_up + ';assert ' + test_code
-        exec(test, {module_name: module, })
-
+                    func()
 
 if __name__ == "__main__":
     py_files = ('myclass.py', 'processor.py')

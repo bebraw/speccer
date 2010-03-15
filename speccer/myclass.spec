@@ -1,17 +1,14 @@
-# TODO
-#set up
-#    c = myclass.MyClass() # this has to match to module name
+set up
+    c = myclass.MyClass()
 
 adds two and two
-    2 + 2 == 4
-    #c = myclass.MyClass() # TODO: eliminate this
-    #c.add(2,2) == 4
+    c.add(2,2) == 4
 
-#adds negatives
-#    c.add(10, -10) == 0
+adds negatives
+    c.add(10, -10) == 0
 
-#this_fails
+#this fails
 #    c.foobar()
 
-#fails adding int and string
-#    c.add(10, 'foo') raises TypeError
+fails adding int and string
+    c.add(10, 'foo') raises TypeError
