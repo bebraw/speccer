@@ -1,17 +1,4 @@
-class Indentation:
-    def __init__(self, line):
-        indentation_end = self._find_last_from_beginning(line, ' ')
-        self.amount = indentation_end + 1
-
-    def _find_last_from_beginning(self, line, needle):
-        for i, char in enumerate(line):
-            if char != needle:
-                return i - 1
-
-        return 0
-
-    def __call__(self):
-        return self.amount * ' '
+from indentation import Indentation
 
 class SpecificationProcessor:
     def __init__(self, file_name):
@@ -65,6 +52,6 @@ class SpecificationProcessor:
                     for content in self.set_up_content:
                         ret += '\n' + content
 
-                    return ret
+                return ret
         elif self.found_set_up:
             self.found_set_up = False

@@ -53,7 +53,7 @@ class SpecificationRunner:
                     func()
 
 if __name__ == "__main__":
-    py_files = ('myclass.py', 'processor.py')
+    py_files = ('indentation.py', 'myclass.py', 'processor.py')
 
     runner = SpecificationRunner()
     runner.run(py_files)
