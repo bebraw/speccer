@@ -44,6 +44,8 @@ class SpecificationProcessor:
 
                 return indentation() + 'try: ' + expr + '\n' + \
                     indentation() + 'except ' + error + ': pass'
+            elif len(stripped_line) == 0:
+                return None
             else:
                 return line
 

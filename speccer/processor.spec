@@ -1,21 +1,21 @@
 set up
     c = processor.SpecificationProcessor('processor')
 
-#processes set up
-#    c.process_line('set up') == 'def set_up()'
+processes set up
+    c.process_line('set up') == None
 
-#processes declaration
-#    c.process_line('process this  ') == 'def process_this():'
+processes declaration
+    c.process_line('process this  ') == 'def process_this():'
 
-#processes indentation
-#    c.process_line('    a = 5') == '    a = 5'
+processes indentation
+    c.process_line('    a = 5') == '    a = 5'
 
 # TODO!
 #processes equals assertion
 #    c.process_line('    b == 10') == '    assert b == 10'
 
-#processes empty line
-#    c.process_line('    ') == None
+processes empty line
+    c.process_line('    ') == None
 
 processes comment
     c.process_line('# some comment') == None
