@@ -8,7 +8,7 @@ class SpecificationProcessor:
         self.set_up_content = []
 
     def process(self, lines):
-        ret = ['import ' + self.file_name, ]
+        ret = ['import ' + self.file_name, 'from expecter import expect', ]
         
         for line in lines:
             processed_line = self.process_line(line)
@@ -32,10 +32,15 @@ class SpecificationProcessor:
                 self.set_up_content.append(line)
                 return
 
-            if '==' in line:
-                return indentation() + 'assert ' + line.strip()
-            elif 'raises' in line:
-                expr, error = line.strip().split('raises')
+            if '==' in stripped_line:
+                parts = stripped_line.split('==')
+                parts_len = len(parts)
+
+                l_part = '=='.join(parts[0:parts_len/2])
+                r_part = '=='.join(parts[parts_len/2:parts_len])
+                return indentation() + 'expect(' + l_part + ') == ' + r_part
+            elif 'raises' in stripped_line:
+                expr, error = stripped_line.split('raises')
 
                 return indentation() + 'try: ' + expr + '\n' + \
                     indentation() + 'except ' + error + ': pass'
