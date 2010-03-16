@@ -13,6 +13,9 @@ processes indentation
 processes equals assertion
     c.process_line('    b == 10') == '        self.assertEqual(b, 10)'
 
+processes not equals assertion
+    c.process_line('    b != 10') == '        self.assertNotEqual(b, 10)'
+
 processes empty line
     c.process_line('    ') == None
 

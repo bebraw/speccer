@@ -51,13 +51,18 @@ class SpecificationProcessor:
                 l_part = '=='.join(parts[0:parts_lim])
                 r_part = '=='.join(parts[parts_lim:parts_len])
 
-                print parts_len
-                print 'line', stripped_line
-                print 'l_part', l_part
-                print 'r_part', r_part
-                print '\n'
-
                 ret = indentation() + 'self.assertEqual(' + l_part + ', ' + \
+                    r_part + ')'
+            elif '!=' in stripped_line:
+                parts = stripped_line.split('!=')
+                parts = [part.strip() for part in parts]
+                parts_len = len(parts)
+                parts_lim = int(round(parts_len / 2.0))
+
+                l_part = '!='.join(parts[0:parts_lim])
+                r_part = '!='.join(parts[parts_lim:parts_len])
+
+                ret = indentation() + 'self.assertNotEqual(' + l_part + ', ' + \
                     r_part + ')'
             elif 'raises' in stripped_line:
                 expr, error = stripped_line.split('raises')
