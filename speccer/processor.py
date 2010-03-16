@@ -50,11 +50,13 @@ class Inequality(Statement):
     code = 'assertTrue'
 
     def _code_parameters(self, l_part, r_part):
-        return l_part + ' ' + self.value + ' ' + r_part
+        l_parts = l_part.split(self.value)
+
+        return (' ' + self.value + ' ').join(l_parts) + ' ' + self.value + \
+            ' ' + r_part
 
 class BiggerThan(Inequality):
     value = '>'
-
 
 class BiggerThanOrEquals(Inequality):
     value = '>='
