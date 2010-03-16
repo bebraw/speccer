@@ -16,6 +16,12 @@ processes equals assertion
 processes not equals assertion
     c.process_line('    b != 10') == '        self.assertNotEqual(b, 10)'
 
+processes almost equals assertion
+    c.process_line('    b ~= 10') == '        self.assertAlmostEqual(b, 10)'
+
+processes not almost equals assertion
+    c.process_line('    b !~= 10') == '        self.assertNotAlmostEqual(b, 10)'
+
 processes empty line
     c.process_line('    ') == None
 

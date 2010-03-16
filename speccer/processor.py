@@ -26,6 +26,14 @@ class NotEquals(Statement):
     value = '!='
     code = 'assertNotEqual'
 
+class AlmostEquals(Statement):
+    value = '~='
+    code = 'assertAlmostEqual'
+
+class AlmostNotEquals(Statement):
+    value = '!~='
+    code = 'assertNotAlmostEqual'
+
 class Raises(Statement):
     value = 'raises'
 
@@ -43,7 +51,8 @@ class Any(Statement):
 
 class Statements(list):
     def __init__(self):
-        statements = (Equals(), NotEquals(), Raises(), Any())
+        statements = (Equals(), NotEquals(), AlmostNotEquals(),
+            AlmostEquals(), Raises(), Any())
 
         super(Statements, self).__init__(statements)
 
