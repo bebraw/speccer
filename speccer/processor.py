@@ -9,17 +9,17 @@ class SpecificationProcessor:
         self.file_name = file_name
 
         self._statements = Statements()
-        self.found_set_up = False
-        self.set_up_content = []
 
     def process(self, lines):
         test_class_name = 'Test' + self.file_name
         ret = ['import unittest', 'import ' + self.file_name,
             'class ' + test_class_name + '(unittest.TestCase):',
             ]
-        
-        for line in lines:
-            processed_line = self.process_line(line)
+
+        new_lines, set_up = self.pick_set_up(lines)
+
+        for line in new_lines:
+            processed_line = self.process_line(line, set_up)
             
             if processed_line:
                 ret.append(processed_line)
@@ -31,18 +31,36 @@ class SpecificationProcessor:
 
         return '\n'.join(ret)
 
-    # XXX: separate to LineProcessor?
-    def process_line(self, line):
+    def pick_set_up(self, lines):
+        found_set_up = False
+        new_lines = []
+        set_up = []
+
+        for line in lines:
+            if line[0] == ' ':
+                if found_set_up:
+                    set_up.append(line)
+                else:
+                    new_lines.append(line)
+            else:
+                stripped_line = line.strip()
+                if len(stripped_line) > 0:
+                    if stripped_line == 'set up':
+                        found_set_up = True
+                    else:
+                        new_lines.append(line)
+                elif found_set_up:
+                    found_set_up = False
+
+        return new_lines, set_up
+
+    def process_line(self, line, set_up=()):
         stripped_line = line.strip()
 
         if len(stripped_line) > 0 and stripped_line[0] == '#':
             return None
 
         if line[0] == ' ':
-            if self.found_set_up:
-                self.set_up_content.append(line)
-                return
-
             indentation = Indentation(line)
             ret = self._statements.convert(stripped_line)
 
@@ -55,15 +73,9 @@ class SpecificationProcessor:
             return default_indentation() + indentation() + ret
 
         if len(stripped_line) > 0:
-            if stripped_line == 'set up':
-                self.found_set_up = True
-            else:
-                ret = 'def test_' + stripped_line.replace(' ', '_') + '(self):'
+            ret = 'def test_' + stripped_line.replace(' ', '_') + '(self):'
 
-                if len(self.set_up_content) > 0:
-                    for content in self.set_up_content:
-                        ret += '\n' + default_indentation() + content
+            for content in set_up:
+                ret += '\n' + default_indentation() + content
 
-                return '\n' + default_indentation() + ret
-        elif self.found_set_up:
-            self.found_set_up = False
+            return '\n' + default_indentation() + ret

@@ -1,9 +1,6 @@
 set up
     c = processor.SpecificationProcessor('processor')
 
-processes set up
-    c.process_line('set up') == None
-
 processes declaration
     c.process_line('process this  ') == '\n    def test_process_this(self):'
 
