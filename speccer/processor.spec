@@ -10,9 +10,8 @@ processes declaration
 processes indentation
     c.process_line('    a = 5') == '        a = 5'
 
-# TODO!
-#processes equals assertion
-#    c.process_line('    b == 10') == '    assert b == 10'
+processes equals assertion
+    c.process_line('    b == 10') == '        self.assertEqual(b, 10)'
 
 processes empty line
     c.process_line('    ') == None

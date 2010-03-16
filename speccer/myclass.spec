@@ -7,8 +7,5 @@ adds two and two
 adds negatives
     c.add(10, -10) == 0
 
-#this fails
-#    c.foobar()
-
 fails adding int and string
     c.add(10, 'foo') raises TypeError
