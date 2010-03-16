@@ -5,10 +5,10 @@ processes set up
     c.process_line('set up') == None
 
 processes declaration
-    c.process_line('process this  ') == 'def process_this():'
+    c.process_line('process this  ') == '\n    def test_process_this(self):'
 
 processes indentation
-    c.process_line('    a = 5') == '    a = 5'
+    c.process_line('    a = 5') == '        a = 5'
 
 # TODO!
 #processes equals assertion

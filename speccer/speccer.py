@@ -1,6 +1,5 @@
 from __future__ import with_statement
 
-import inspect
 import imp
 import os
 import sys
@@ -29,28 +28,16 @@ class SpecificationRunner:
                 tmp_file.close()
 
                 try:
-                    module = imp.load_source('spec', tmp_file.name)
+                    try:
+                        module = imp.load_source('spec', tmp_file.name)
+                    except SystemExit:
+                        pass
                 except Exception, e:
                     os.unlink(tmp_file.name)
                     sys.exit(str(e))
 
                 os.unlink(tmp_file.name)
                 os.unlink(tmp_file.name + 'c')
-
-                def to_dict(i):
-                    ret = {}
-
-                    for k, v in i:
-                        ret[k] = v
-
-                    return ret
-
-                spec_funcs = inspect.getmembers(module, inspect.isfunction)
-                spec_funcs = to_dict(spec_funcs)
-
-                set_up = spec_funcs.get('set_up')
-                for name, func in spec_funcs.items():
-                    func()
 
 if __name__ == "__main__":
     py_files = ('indentation.py', 'myclass.py', 'processor.py')

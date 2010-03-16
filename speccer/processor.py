@@ -8,7 +8,10 @@ class SpecificationProcessor:
         self.set_up_content = []
 
     def process(self, lines):
-        ret = ['import ' + self.file_name, 'from expecter import expect', ]
+        test_class_name = 'Test' + self.file_name
+        ret = ['import unittest', 'import ' + self.file_name,
+            'class ' + test_class_name + '(unittest.TestCase):',
+            ]
         
         for line in lines:
             processed_line = self.process_line(line)
@@ -16,6 +19,12 @@ class SpecificationProcessor:
             if processed_line:
                 ret.append(processed_line)
         
+        #ret.append('main()')
+        ret.extend(['suite = unittest.TestLoader().loadTestsFromTestCase(' + \
+            test_class_name + ')',
+            'unittest.TextTestRunner(verbosity=2).run(suite)'
+        ])
+
         return '\n'.join(ret)
 
     # XXX: separate to LineProcessor?
@@ -27,6 +36,7 @@ class SpecificationProcessor:
 
         if line[0] == ' ':
             indentation = Indentation(line)
+            ret = None
 
             if self.found_set_up:
                 self.set_up_content.append(line)
@@ -38,27 +48,36 @@ class SpecificationProcessor:
 
                 l_part = '=='.join(parts[0:parts_len/2])
                 r_part = '=='.join(parts[parts_len/2:parts_len])
-                return indentation() + 'expect(' + l_part + ') == ' + r_part
+
+                ret = indentation() + 'self.assertEqual(' + l_part + ', ' + \
+                    r_part + ')'
             elif 'raises' in stripped_line:
                 expr, error = stripped_line.split('raises')
 
-                return indentation() + 'try: ' + expr + '\n' + \
-                    indentation() + 'except ' + error + ': pass'
+                ret = indentation() + 'try: ' + expr + '\n' + \
+                    self._default_indentation + indentation() + 'except ' + \
+                    error + ': pass'
             elif len(stripped_line) == 0:
                 return None
             else:
-                return line
+                ret = line
+
+            return self._default_indentation + ret
 
         if len(stripped_line) > 0:
             if stripped_line == 'set up':
                 self.found_set_up = True
             else:
-                ret = 'def ' + stripped_line.replace(' ', '_') + '():'
+                ret = 'def test_' + stripped_line.replace(' ', '_') + '(self):'
 
                 if len(self.set_up_content) > 0:
                     for content in self.set_up_content:
-                        ret += '\n' + content
+                        ret += '\n' + self._default_indentation + content
 
-                return ret
+                return '\n' + self._default_indentation + ret
         elif self.found_set_up:
             self.found_set_up = False
+
+    @property
+    def _default_indentation(self):
+        return 4 * ' '
