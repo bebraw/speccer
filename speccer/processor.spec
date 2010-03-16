@@ -10,17 +10,29 @@ processes declaration
 processes indentation
     c.process_line('    a = 5') == '        a = 5'
 
-processes equals assertion
+processes equals
     c.process_line('    b == 10') == '        self.assertEqual(b, 10)'
 
-processes not equals assertion
+processes not equals
     c.process_line('    b != 10') == '        self.assertNotEqual(b, 10)'
 
-processes almost equals assertion
+processes almost equals
     c.process_line('    b ~= 10') == '        self.assertAlmostEqual(b, 10)'
 
-processes not almost equals assertion
+processes not almost equals
     c.process_line('    b !~= 10') == '        self.assertNotAlmostEqual(b, 10)'
+
+processes bigger than
+    c.process_line('    b > 5') == '        self.assertTrue(b > 5)'
+
+processes bigger than or equals
+    c.process_line('    b >= 5') == '        self.assertTrue(b >= 5)'
+
+processes smaller than
+    c.process_line('    b < 5') == '        self.assertTrue(b < 5)'
+
+processes smaller than or equals
+    c.process_line('    b <= 5') == '        self.assertTrue(b <= 5)'
 
 processes empty line
     c.process_line('    ') == None
