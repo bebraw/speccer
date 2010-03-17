@@ -11,7 +11,7 @@ class SpecificationProcessor:
         self._statements = Statements()
 
     def process(self, lines):
-        test_class_name = 'Test' + self.file_name
+        test_class_name = 'Test' + self.file_name.capitalize()
         ret = ['import unittest', 'import ' + self.file_name,
             'class ' + test_class_name + '(unittest.TestCase):',
             ]
@@ -67,15 +67,16 @@ class SpecificationProcessor:
             if len(ret) == 0:
                 return None
             elif hasattr(ret, '__iter__'):
-                return default_indentation() + indentation() + ret[0] + '\n' + \
-                    default_indentation() + indentation() + ret[1]
+                return default_indentation() + indentation() + ret[0] + \
+                    '\n' + default_indentation() + indentation() + ret[1]
 
             return default_indentation() + indentation() + ret
 
         if len(stripped_line) > 0:
-            ret = 'def test_' + stripped_line.replace(' ', '_') + '(self):'
+            ret = '\n' + default_indentation() + 'def test_' + \
+                stripped_line.replace(' ', '_') + '(self):'
 
             for content in set_up:
                 ret += '\n' + default_indentation() + content
 
-            return '\n' + default_indentation() + ret
+            return ret
