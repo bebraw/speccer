@@ -33,6 +33,8 @@ processes smaller than or equals
 
 processes multiple inqualities
     c.process_line('    4 < b < 10') == '        self.assertTrue(4 < b < 10)'
+    c.process_line('    4 <= b < 10') == '        self.assertTrue(4 <= b < 10)'
+    c.process_line('    4 < b <= 10') == '        self.assertTrue(4 < b <= 10)'
 
 processes empty line
     c.process_line('    ') == None
@@ -41,5 +43,5 @@ processes comment
     c.process_line('# some comment') == None
     c.process_line('    # some comment') == None
 
-#processes raises
-#    c.process_line('    c.add(10, 'foo') raises TypeError') == "    try: c.add(10, 'foo')\n    except TypeError: pass"
+processes raises
+    c.process_line('    a raises TypeError') == '        try:a \n        except TypeError: pass'

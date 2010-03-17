@@ -20,7 +20,7 @@ class SpecificationRunner:
                     lines = f.readlines()
 
                 spec_code = processor.process(lines)
-                #print spec_code
+                print spec_code
 
                 # http://docs.python.org/library/tempfile.html#tempfile.mktemp
                 tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.py')
