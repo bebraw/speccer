@@ -30,8 +30,8 @@ Each specification contains a name and some actual code asserting something. I h
 * !=, is not equal
 * ~=, is almost equal
 * !~=, is not almost equal
-* >, bigger than
-* >=, bigger than or equal
+* \>, bigger than
+* \>=, bigger than or equal
 * <, smaller than
 * <=, smaller than or equal
 * x < y < z, multiple inequalities (mix with equality as you want)
