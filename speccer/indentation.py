@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Indentation:
     def __init__(self, line):
         indentation_end = self._find_last_from_beginning(line, ' ')

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Statement:
     def matches(self, line):
         return self.value in line

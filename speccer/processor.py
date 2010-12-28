@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from indentation import Indentation
 from statement import Statements
 
