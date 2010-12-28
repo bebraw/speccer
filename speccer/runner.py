@@ -44,16 +44,43 @@ class SpecificationRunner:
                 os.unlink(tmp_file.name)
                 os.unlink(tmp_file.name + 'c')
 
-def run_tests():
-    spec_files = glob.glob('*.spec')
+def get_specs():
+    return glob.glob('*.spec')
 
+def run_tests(spec_files):
     if len(spec_files) == 0:
         print('\nNo specifications found!')
+
+        return False
     else:
         print('\nRunning tests')
 
         runner = SpecificationRunner()
         runner.run(spec_files)
+
+        return True
+
+def looping_run():
+    def get_file_times(filenames):
+        get_file_time = lambda filename: os.stat(filename).st_mtime
+
+        return map(get_file_time, filenames)
+
+    specs = get_specs()
+    tests_found = run_tests(specs)
+
+    if not tests_found:
+        return
+
+    file_times = get_file_times(specs)
+
+    while True:
+        new_file_times = get_file_times(specs)
+
+        if file_times != new_file_times:
+            file_times = new_file_times
+
+            run_tests(specs)
 
 def main():
     # make sure current working directory is in the path
@@ -97,6 +124,9 @@ folder they are in."""
     parser.add_option("-v", "--version", action="store_true",
         dest="show_version", default=False,
         help="show program's version number and exit")
+    parser.add_option("-l", "--loop", action="store_true",
+        dest="looping_run", default=False,
+        help="run tests in a looping manner. Tests get run each time a spec file is changed")
 
     class CustomValues:
         pass
@@ -107,8 +137,10 @@ folder they are in."""
     if kwargs.get('show_version'):
         print("speccer %s" % version.get())
         sys.exit(0)
+    elif kwargs.get('looping_run'):
+        looping_run()
     else:
-        run_tests()
+        run_tests(get_specs())
 
 if __name__ == '__main__':
     main()
