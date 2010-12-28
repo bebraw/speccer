@@ -9,6 +9,8 @@ import tempfile
 from optparse import OptionParser
 from processor import SpecificationProcessor
 
+import version
+
 class SpecificationRunner:
     def run(self, spec_files):
         for spec_file_name in spec_files:
@@ -103,8 +105,7 @@ folder they are in."""
     kwargs = dict([(k, v) for k, v in options.__dict__.items() \
         if not k.startswith("__")])
     if kwargs.get('show_version'):
-        # TODO: figure out how to handle version
-        print("speccer %s" % "0.2.2") #speccer.__version__)
+        print("speccer %s" % version.get())
         sys.exit(0)
     else:
         run_tests()
