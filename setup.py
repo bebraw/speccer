@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-from setuptools import setup, find_packages
-
-version = '0.1.0'
+import speccer
+from setuptools import setup
 
 description = "Specification based test runner."
 cur_dir = os.path.dirname(__file__)
@@ -14,19 +13,19 @@ except:
 
 setup(
     name = "speccer",
-    version = version,
+    version = speccer.__version__,
     url = 'https://github.com/bebraw/speccer',
     license = 'BSD',
     description = description,
     long_description = long_description,
-    author = 'Juho Vepsäläinen',
+    author = speccer.__author__,
     author_email = 'bebraw@gmail.com',
-    packages = find_packages('speccer'),
-    package_dir = {'': 'speccer'},
+    packages = ['speccer', ],
+    package_dir = {'speccer': 'speccer', },
     install_requires = ['setuptools', ],
     entry_points="""
     [console_scripts]
-    spec = speccer.speccer:main
+    speccer = speccer.runner:main
     """,
     classifiers=[
         'Development Status :: 4 - Beta',
