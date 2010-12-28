@@ -4,7 +4,7 @@ Run "setup.py install" to start rocking. See "demo" folder for an actual example
 
 ## Basic Specification Syntax
 
-As you probably didn't bother checking demo folder or so let's take a look at a concrete example:
+As you probably didn't bother checking the demo folder or so let's take a look at a concrete example:
 
 myclass.spec: (tests myclass.py)
 
