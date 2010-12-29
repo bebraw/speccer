@@ -12,12 +12,28 @@ class SpecificationProcessor:
         self._statements = Statements()
 
     def process(self, lines):
-        test_class_name = 'Test' + self.file_name.capitalize()
-        ret = ['import unittest', 'import ' + self.file_name,
-            'class ' + test_class_name + '(unittest.TestCase):',
-            ]
+        ret = ['import unittest', 'import ' + self.file_name]
 
-        new_lines, set_up = self.pick_set_up(lines)
+        # check file beginning now (attach defs as is)
+        # this is a bit weak since it allows defs to be only at beginning
+        defs = map(lambda a: a.startswith('def'), lines)
+
+        def r_index(a, val):
+            # missing list.rindex...
+            return len(a) - a[::-1].index(val) - 1
+
+        first_index = 0
+        if any(defs):
+            last_def_index = r_index(defs, True)
+
+            first_index = map(lambda a: a.strip(), lines[last_def_index:]).index('')
+
+        ret.extend(lines[:first_index])
+
+        test_class_name = 'Test' + self.file_name.capitalize()
+        ret.append('class ' + test_class_name + '(unittest.TestCase):')
+
+        new_lines, set_up = self.pick_set_up(lines[first_index:])
 
         for line in new_lines:
             processed_line = self.process_line(line, set_up)

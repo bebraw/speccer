@@ -1,3 +1,6 @@
+def prefix():
+    return 4 * ' '
+
 set up
     c = processor.SpecificationProcessor('processor')
 
@@ -5,7 +8,7 @@ skips def
     c.process_line('def foo():') == 'def foo():'
 
 skips return
-    c.process_line('    return True') == '    return True'
+    c.process_line(prefix() + 'return True') == prefix() + 'return True'
 
 processes declaration
     c.process_line('process this  ') == '\n    def test_process_this(self):'

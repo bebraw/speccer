@@ -26,7 +26,7 @@ class SpecificationRunner:
                     lines = f.readlines()
 
                 spec_code = processor.process(lines)
-                
+
                 # http://docs.python.org/library/tempfile.html#tempfile.mktemp
                 tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.py')
                 tmp_file.write(spec_code)
