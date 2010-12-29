@@ -1,5 +1,8 @@
 def prefix():
-    return 4 * ' '
+    return 8 * ' '
+
+def process(c, line):
+    return c.process_line('    ' + line)
 
 set up
     c = processor.SpecificationProcessor('processor')
@@ -11,47 +14,47 @@ skips return
     c.process_line(prefix() + 'return True') == prefix() + 'return True'
 
 processes declaration
-    c.process_line('process this  ') == '\n    def test_process_this(self):'
+    c.process_line('process this  ') == '\n    ' + 'def test_process_this(self):'
 
 processes indentation
-    c.process_line('    a = 5') == '        a = 5'
+    process(c, 'a = 5') == prefix() + 'a = 5'
 
 processes equals
-    c.process_line('    b == 10') == '        self.assertEqual(b, 10)'
+    process(c, 'b == 10') == prefix() + 'self.assertEqual(b, 10)'
 
 processes not equals
-    c.process_line('    b != 10') == '        self.assertNotEqual(b, 10)'
+    process(c, 'b != 10') == prefix() + 'self.assertNotEqual(b, 10)'
 
 processes almost equals
-    c.process_line('    b ~= 10') == '        self.assertAlmostEqual(b, 10)'
+    process(c, 'b ~= 10') == prefix() + 'self.assertAlmostEqual(b, 10)'
 
 processes not almost equals
-    c.process_line('    b !~= 10') == '        self.assertNotAlmostEqual(b, 10)'
+    process(c, 'b !~= 10') == prefix() + 'self.assertNotAlmostEqual(b, 10)'
 
 processes bigger than
-    c.process_line('    b > 5') == '        self.assertTrue(b > 5)'
+    process(c, 'b > 5') == prefix() + 'self.assertTrue(b > 5)'
 
 processes bigger than or equals
-    c.process_line('    b >= 5') == '        self.assertTrue(b >= 5)'
+    process(c, 'b >= 5') == prefix() + 'self.assertTrue(b >= 5)'
 
 processes smaller than
-    c.process_line('    b < 5') == '        self.assertTrue(b < 5)'
+    process(c, 'b < 5') == prefix() + 'self.assertTrue(b < 5)'
 
 processes smaller than or equals
-    c.process_line('    b <= 5') == '        self.assertTrue(b <= 5)'
+    process(c, 'b <= 5') == prefix() + 'self.assertTrue(b <= 5)'
 
 processes multiple inqualities
-    c.process_line('    4 < b < 10') == '        self.assertTrue(4 < b < 10)'
-    c.process_line('    4 <= b < 10') == '        self.assertTrue(4 <= b < 10)'
-    c.process_line('    4 < b <= 10') == '        self.assertTrue(4 < b <= 10)'
-    c.process_line('    4 <= b <= 10') == '        self.assertTrue(4 <= b <= 10)'
+    process(c, '4 < b < 10') == prefix() + 'self.assertTrue(4 < b < 10)'
+    process(c, '4 <= b < 10') == prefix() + 'self.assertTrue(4 <= b < 10)'
+    process(c, '4 < b <= 10') == prefix() + 'self.assertTrue(4 < b <= 10)'
+    process(c, '4 <= b <= 10') == prefix() + 'self.assertTrue(4 <= b <= 10)'
 
 processes empty line
-    c.process_line('    ') == None
+    process(c, '    ') == None
 
 processes comment
-    c.process_line('# some comment') == None
-    c.process_line('    # some comment') == None
+    process(c, '# some comment') == None
+    process(c, '    # some comment') == None
 
 processes raises
-    c.process_line('    a raises TypeError') == '        try:a \n        except TypeError: pass'
+    process(c, 'a raises TypeError') == prefix() + 'try:a \n        except TypeError: pass'

@@ -27,6 +27,7 @@ class SpecificationProcessor:
             last_def_index = r_index(defs, True)
 
             first_index = map(lambda a: a.strip(), lines[last_def_index:]).index('')
+            first_index += last_def_index
 
         ret.extend(lines[:first_index])
 
