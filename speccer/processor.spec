@@ -4,6 +4,9 @@ set up
 skips def
     c.process_line('def foo():') == 'def foo():'
 
+skips return
+    c.process_line('    return True') == '    return True'
+
 processes declaration
     c.process_line('process this  ') == '\n    def test_process_this(self):'
 

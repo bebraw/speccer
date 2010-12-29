@@ -61,6 +61,10 @@ class SpecificationProcessor:
         if len(stripped_line) > 0 and stripped_line[0] == '#':
             return None
 
+        skips = ('def', 'return')
+        if any(map(lambda a: stripped_line.startswith(a + ' '), skips)):
+            return line
+
         if line[0] == ' ':
             indentation = Indentation(line)
             ret = self._statements.convert(stripped_line)
@@ -74,9 +78,6 @@ class SpecificationProcessor:
             return default_indentation() + indentation() + ret
 
         if len(stripped_line) > 0:
-            if stripped_line.startswith('def '):
-                return stripped_line
-
             ret = '\n' + default_indentation() + 'def test_' + \
                 stripped_line.replace(' ', '_') + '(self):'
 
