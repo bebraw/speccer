@@ -58,3 +58,9 @@ processes comment
 
 processes raises
     process(c, 'a raises TypeError') == prefix() + 'try:a \n        except TypeError: pass'
+
+processes anything
+    c.process_line('some test') == '\n    def test_some_test(self):'
+    c.process_line('foobar') == 'foobar'
+    c.process_line('') == ''
+    c.process_line('other test') == '\n    def test_other_test(self):'

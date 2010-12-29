@@ -11,6 +11,8 @@ class SpecificationProcessor:
 
         self._statements = Statements()
 
+        self._test_found = False
+
     def process(self, lines):
         ret = ['import unittest', 'import ' + self.file_name]
 
@@ -83,7 +85,7 @@ class SpecificationProcessor:
         if any(map(lambda a: stripped_line.startswith(a + ' '), skips)):
             return line
 
-        if line[0] == ' ':
+        if line and line[0] == ' ':
             indentation = Indentation(line)
             ret = self._statements.convert(stripped_line)
 
@@ -95,7 +97,9 @@ class SpecificationProcessor:
 
             return default_indentation() + indentation() + ret
 
-        if len(stripped_line) > 0:
+        if len(stripped_line) > 0 and not self._test_found:
+            self._test_found = True
+
             ret = '\n' + default_indentation() + 'def test_' + \
                 stripped_line.replace(' ', '_') + '(self):'
 
@@ -104,4 +108,7 @@ class SpecificationProcessor:
 
             return ret
 
-        return ''
+        if not stripped_line:
+            self._test_found = False
+
+        return line
