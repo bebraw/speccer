@@ -2,4 +2,4 @@
 
 def get():
     # returns current version of the lib
-    return '0.3.1'
+    return '0.3.2'

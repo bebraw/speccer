@@ -50,6 +50,8 @@ def get_specs():
     return glob.glob('*.spec')
 
 def output_tests(option, opt, output_dir, parser):
+    got_all = False
+
     for spec_name in get_specs():
         with open(spec_name) as f:
             lines = f.readlines()
@@ -61,9 +63,41 @@ def output_tests(option, opt, output_dir, parser):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        py_file = os.path.join(output_dir, 'test_' + base_name + '.py')
-        with open(py_file, 'w') as f:
-            f.write(spec_code)
+        py_file_name = 'test_' + base_name + '.py'
+        py_file = os.path.join(output_dir, py_file_name)
+
+        def write_file():
+            print('Writing ' + py_file)
+
+            with open(py_file, 'w') as f:
+                f.write(spec_code)
+
+        if os.path.exists(py_file):
+            def do_nothing():
+                print('Doing nothing.')
+
+            possible_answers = {
+                'Y': write_file,
+                'N': do_nothing,
+                'A': None
+            }
+            opts = '/'.join(possible_answers.keys())
+            answer = None
+
+            while answer not in possible_answers:
+                if got_all:
+                    answer = 'Y'
+                else:
+                    answer = raw_input('Are you sure you want to override file (' +
+                        py_file_name + ')?\n' + opts)
+
+                    if answer == 'A':
+                        got_all = True
+                        answer = 'Y'
+
+            possible_answers[answer]()
+        else:
+            write_file()
 
 def run_tests(spec_files):
     if len(spec_files) == 0:
