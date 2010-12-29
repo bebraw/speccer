@@ -1,0 +1,2 @@
+-make sure tested modules get reloaded each time -l loop is executed
+-hook up tested modules (modif) with -l (find something like inotify for win)

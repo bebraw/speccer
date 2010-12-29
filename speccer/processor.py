@@ -29,7 +29,8 @@ class SpecificationProcessor:
             first_index = map(lambda a: a.strip(), lines[last_def_index:]).index('')
             first_index += last_def_index
 
-        ret.extend(lines[:first_index])
+        processed_lines = map(lambda a: self.process_line(a), lines[:first_index])
+        ret.extend(processed_lines)
 
         test_class_name = 'Test' + self.file_name.capitalize()
         ret.append('class ' + test_class_name + '(unittest.TestCase):')
