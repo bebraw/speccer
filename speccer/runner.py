@@ -61,7 +61,7 @@ def output_tests(option, opt, output_dir, parser):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        py_file = os.path.join(output_dir, base_name + '.py')
+        py_file = os.path.join(output_dir, 'test_' + base_name + '.py')
         with open(py_file, 'w') as f:
             f.write(spec_code)
 
