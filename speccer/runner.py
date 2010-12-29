@@ -36,7 +36,7 @@ class SpecificationRunner:
                     try:
                         module = imp.load_source('spec', tmp_file.name)
                     except SystemExit:
-                        console.log('Module ' + base_name + ' not found!');
+                        print('Module ' + base_name + ' not found!');
                 except Exception, e:
                     os.unlink(tmp_file.name)
                     sys.exit(str(e))
