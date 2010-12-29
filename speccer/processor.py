@@ -74,6 +74,9 @@ class SpecificationProcessor:
             return default_indentation() + indentation() + ret
 
         if len(stripped_line) > 0:
+            if stripped_line.startswith('def '):
+                return stripped_line
+
             ret = '\n' + default_indentation() + 'def test_' + \
                 stripped_line.replace(' ', '_') + '(self):'
 

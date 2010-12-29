@@ -1,6 +1,9 @@
 set up
     c = processor.SpecificationProcessor('processor')
 
+skips def
+    c.process_line('def foo():') == 'def foo():'
+
 processes declaration
     c.process_line('process this  ') == '\n    def test_process_this(self):'
 
