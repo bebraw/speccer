@@ -11,44 +11,59 @@ from processor import SpecificationProcessor
 
 import version
 
-class SpecificationRunner:
-    def run(self, spec_files):
-        for spec_file_name in spec_files:
-            base_name = os.path.splitext(spec_file_name)[0]
-            py_file_name = base_name + '.py'
+def get_base_name(a):
+    return os.path.splitext(a)[0]
 
-            if os.path.exists(py_file_name):
-                print('\n**Testing ' + spec_file_name + '**\n')
+def run(spec_files):
+    for spec_file_name in spec_files:
+        base_name = get_base_name(spec_file_name)
+        py_file_name = base_name + '.py'
 
-                processor = SpecificationProcessor(base_name)
+        if os.path.exists(py_file_name):
+            print('\n**Testing ' + spec_file_name + '**\n')
 
-                with open(spec_file_name) as f:
-                    lines = f.readlines()
+            processor = SpecificationProcessor(base_name)
 
-                spec_code = processor.process(lines)
+            with open(spec_file_name) as f:
+                lines = f.readlines()
 
-                # http://docs.python.org/library/tempfile.html#tempfile.mktemp
-                tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.py')
-                tmp_file.write(spec_code)
-                tmp_file.close()
+            spec_code = processor.process(lines)
 
+            # http://docs.python.org/library/tempfile.html#tempfile.mktemp
+            tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.py')
+            tmp_file.write(spec_code)
+            tmp_file.close()
+
+            try:
                 try:
-                    try:
-                        module = imp.load_source('spec', tmp_file.name)
-                    except SystemExit:
-                        print('Module ' + base_name + ' not found!');
-                except Exception, e:
-                    os.unlink(tmp_file.name)
-                    sys.exit(str(e))
-
+                    module = imp.load_source('spec', tmp_file.name)
+                except SystemExit:
+                    print('Module ' + base_name + ' not found!');
+            except Exception, e:
                 os.unlink(tmp_file.name)
-                os.unlink(tmp_file.name + 'c')
+                sys.exit(str(e))
+
+            os.unlink(tmp_file.name)
+            os.unlink(tmp_file.name + 'c')
 
 def get_specs():
     return glob.glob('*.spec')
 
-def output_tests(*args):
-    pass # TODO!
+def output_tests(option, opt, output_dir, parser):
+    for spec_name in get_specs():
+        with open(spec_name) as f:
+            lines = f.readlines()
+
+        base_name = get_base_name(spec_name)
+        processor = SpecificationProcessor(base_name)
+        spec_code = processor.process(lines)
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        py_file = os.path.join(output_dir, base_name + '.py')
+        with open(py_file, 'w') as f:
+            f.write(spec_code)
 
 def run_tests(spec_files):
     if len(spec_files) == 0:
@@ -58,8 +73,7 @@ def run_tests(spec_files):
     else:
         print('\nRunning tests')
 
-        runner = SpecificationRunner()
-        runner.run(spec_files)
+        run(spec_files)
 
         return True
 
@@ -135,6 +149,7 @@ folder they are in."""
         callback=looping_run,
         help="run tests in a looping manner. Tests get run each time a spec file is changed")
     parser.add_option("-o", "--output", action="callback",
+        dest="output_folder", type="string",
         callback=output_tests,
         help="output generated test files to given folder")
 
