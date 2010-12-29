@@ -50,7 +50,10 @@ processes multiple inqualities
     process(c, '4 <= b <= 10') == prefix() + 'self.assertTrue(4 <= b <= 10)'
 
 processes empty line
-    process(c, '    ') == None
+    process(c, '    ') == ''
+
+processes newline
+    process(c, '\n') == ''
 
 processes comment
     process(c, '# some comment') == None
@@ -61,8 +64,24 @@ processes raises
 
 processes anything
     c.process_line('some test') == '\n    def test_some_test(self):'
-    c.process_line('foobar') == 'foobar'
+    c.process_line('foobar') == '    foobar'
     c.process_line('') == ''
     c.process_line('other test') == '\n    def test_other_test(self):'
-    c.process_line('\n') == '\n'
+    c.process_line('') == ''
     c.process_line('yet another test') == '\n    def test_yet_another_test(self):'
+
+processes test with Python
+    c.process_line('some test') == '\n    def test_some_test(self):'
+    c.process_line('    if True:') == '        if True:'
+    c.process_line("        print('works')") == "            print('works')"
+    c.process_line('') == ''
+    c.process_line("    print('end')") == "        print('end')"
+
+processes long string
+    c.process_line('some test') == '\n    def test_some_test(self):'
+    c.process_line("    expected = '''") == "        expected = '''"
+    c.process_line('var a = 4;') == 'var a = 4;'
+    c.process_line('var b = 5;') == 'var b = 5;'
+    c.process_line("'''") == "    '''"
+    c.process_line('') == ''
+    c.process_line("    print('done')") == "        print('done')"

@@ -12,6 +12,7 @@ class SpecificationProcessor:
         self._statements = Statements()
 
         self._test_found = False
+        self._long_comment_found = False
 
     def process(self, lines):
         ret = ['import unittest', 'import ' + self.file_name]
@@ -87,17 +88,23 @@ class SpecificationProcessor:
         if any(map(lambda a: stripped_line.startswith(a + ' '), skips)):
             return line
 
+        just_found = False
+        if stripped_line.endswith("'''"):
+            self._long_comment_found = '=' in stripped_line
+            just_found = True
+
+        if not just_found and self._long_comment_found:
+            return line
+
         if line and line[0] == ' ':
             indentation = Indentation(line)
             ret = self._statements.convert(stripped_line)
 
-            if len(ret) == 0:
-                return None
-            elif hasattr(ret, '__iter__'):
+            if hasattr(ret, '__iter__'):
                 return default_indentation() + indentation() + ret[0] + \
                     '\n' + default_indentation() + indentation() + ret[1]
 
-            return default_indentation() + indentation() + ret
+            return (default_indentation() + indentation() + ret).rstrip()
 
         if len(stripped_line) > 0 and not self._test_found:
             self._test_found = True
@@ -113,4 +120,4 @@ class SpecificationProcessor:
         if not stripped_line or stripped_line == '\n':
             self._test_found = False
 
-        return line
+        return (default_indentation() + line).rstrip()
