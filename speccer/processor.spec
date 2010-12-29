@@ -35,6 +35,7 @@ processes multiple inqualities
     c.process_line('    4 < b < 10') == '        self.assertTrue(4 < b < 10)'
     c.process_line('    4 <= b < 10') == '        self.assertTrue(4 <= b < 10)'
     c.process_line('    4 < b <= 10') == '        self.assertTrue(4 < b <= 10)'
+    c.process_line('    4 <= b <= 10') == '        self.assertTrue(4 <= b <= 10)'
 
 processes empty line
     c.process_line('    ') == None
