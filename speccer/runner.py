@@ -138,10 +138,14 @@ folder they are in."""
         callback=output_tests,
         help="output generated test files to given folder")
 
-    parser.parse_args()
+    options, args = parser.parse_args()
 
     if sys.argv < 2:
         run_tests(get_specs())
+    elif args > 0:
+        args = map(lambda a: a + '.spec' if not a.endswith('.spec') else a, args)
+
+        run_tests(args)
 
 if __name__ == '__main__':
     main()
