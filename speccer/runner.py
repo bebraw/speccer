@@ -9,6 +9,7 @@ import tempfile
 import time
 from optparse import OptionParser
 from processor import SpecificationProcessor
+from itertools import chain
 
 import version
 
@@ -196,7 +197,18 @@ folder they are in."""
     if len(sys.argv) < 2:
         run_tests(get_specs())
     elif len(args) > 0:
+        # TODO: make Python imports work with relative paths in order to enable this
+        # expand dir contents to args
+        #args = list(chain(*map(lambda a: map(lambda b: os.path.join(a, b), os.listdir(a)) if os.path.isdir(a) else a, args)))
+
+        # get rid of files end with other than .spec or not containing extension at all
+        args = filter(lambda a: a.endswith('.spec') or a.find('.') == -1, args)
+
+        # add .spec to files that don't have it yet
         args = map(lambda a: a + '.spec' if not a.endswith('.spec') else a, args)
+
+        # make sure files really exist
+        args = filter(lambda a: os.path.exists(a), args)
 
         run_tests(args)
 
