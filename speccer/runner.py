@@ -47,6 +47,9 @@ class SpecificationRunner:
 def get_specs():
     return glob.glob('*.spec')
 
+def output_tests(*args):
+    pass # TODO!
+
 def run_tests(spec_files):
     if len(spec_files) == 0:
         print('\nNo specifications found!')
@@ -60,7 +63,7 @@ def run_tests(spec_files):
 
         return True
 
-def looping_run():
+def looping_run(*args):
     def get_file_times(filenames):
         get_file_time = lambda filename: os.stat(filename).st_mtime
 
@@ -81,6 +84,10 @@ def looping_run():
             file_times = new_file_times
 
             run_tests(specs)
+
+def show_version(*args):
+    print("speccer %s" % version.get())
+    sys.exit(0)
 
 def main():
     # make sure current working directory is in the path
@@ -121,26 +128,17 @@ folder they are in."""
             return self.epilog
 
     parser = MyParser(usage=usage, description=description, epilog=epilog)
-    parser.add_option("-v", "--version", action="store_true",
-        dest="show_version", default=False,
+    parser.add_option("-v", "--version", action="callback",
+        callback=show_version,
         help="show program's version number and exit")
-    parser.add_option("-l", "--loop", action="store_true",
-        dest="looping_run", default=False,
+    parser.add_option("-l", "--loop", action="callback",
+        callback=looping_run,
         help="run tests in a looping manner. Tests get run each time a spec file is changed")
+    parser.add_option("-o", "--output", action="callback",
+        callback=output_tests,
+        help="output generated test files to given folder")
 
-    class CustomValues:
-        pass
-    options, args = parser.parse_args(values=CustomValues)
-
-    kwargs = dict([(k, v) for k, v in options.__dict__.items() \
-        if not k.startswith("__")])
-    if kwargs.get('show_version'):
-        print("speccer %s" % version.get())
-        sys.exit(0)
-    elif kwargs.get('looping_run'):
-        looping_run()
-    else:
-        run_tests(get_specs())
+    run_tests(get_specs())
 
 if __name__ == '__main__':
     main()
