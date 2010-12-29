@@ -103,3 +103,5 @@ class SpecificationProcessor:
                 ret += '\n' + default_indentation() + content
 
             return ret
+
+        return ''
