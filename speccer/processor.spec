@@ -64,3 +64,5 @@ processes anything
     c.process_line('foobar') == 'foobar'
     c.process_line('') == ''
     c.process_line('other test') == '\n    def test_other_test(self):'
+    c.process_line('\n') == '\n'
+    c.process_line('yet another test') == '\n    def test_yet_another_test(self):'

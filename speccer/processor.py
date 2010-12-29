@@ -72,6 +72,8 @@ class SpecificationProcessor:
                         new_lines.append(line)
                 elif found_set_up:
                     found_set_up = False
+                else:
+                    new_lines.append(line)
 
         return new_lines, set_up
 
@@ -108,7 +110,7 @@ class SpecificationProcessor:
 
             return ret
 
-        if not stripped_line:
+        if not stripped_line or stripped_line == '\n':
             self._test_found = False
 
         return line
