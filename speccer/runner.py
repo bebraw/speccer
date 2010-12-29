@@ -6,6 +6,7 @@ import imp
 import os
 import sys
 import tempfile
+import time
 from optparse import OptionParser
 from processor import SpecificationProcessor
 
@@ -132,6 +133,8 @@ def looping_run(*args):
             file_times = new_file_times
 
             run_tests(specs)
+
+        time.sleep(1)
 
 def show_version(*args):
     print("speccer %s" % version.get())
