@@ -140,9 +140,9 @@ folder they are in."""
 
     options, args = parser.parse_args()
 
-    if sys.argv < 2:
+    if len(sys.argv) < 2:
         run_tests(get_specs())
-    elif args > 0:
+    elif len(args) > 0:
         args = map(lambda a: a + '.spec' if not a.endswith('.spec') else a, args)
 
         run_tests(args)
