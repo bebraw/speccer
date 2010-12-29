@@ -90,7 +90,8 @@ def output_tests(option, opt, output_dir, parser):
                     answer = 'Y'
                 else:
                     answer = raw_input('Are you sure you want to override file (' +
-                        py_file_name + ')?\n' + opts)
+                        py_file_name + ')?\n' + opts + '\n')
+                    answer = answer.upper()
 
                     if answer == 'A':
                         got_all = True
