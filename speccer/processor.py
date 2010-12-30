@@ -82,7 +82,7 @@ class SpecificationProcessor:
         stripped_line = line.strip()
 
         if len(stripped_line) > 0 and stripped_line[0] == '#':
-            return None
+            return line
 
         skips = ('def', 'return')
         if any(map(lambda a: stripped_line.startswith(a + ' '), skips)):

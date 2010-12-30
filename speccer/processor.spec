@@ -56,8 +56,8 @@ processes newline
     process(c, '\n') == ''
 
 processes comment
-    process(c, '# some comment') == None
-    process(c, '    # some comment') == None
+    c.process_line('# my comment') == '# my comment'
+    c.process_line('    # my comment') == '    # my comment'
 
 processes raises
     process(c, 'a raises TypeError') == prefix() + 'try:a \n        except TypeError: pass'
@@ -85,3 +85,7 @@ processes long string
     c.process_line("'''") == "'''"
     c.process_line('') == ''
     c.process_line("    print('done')") == "        print('done')"
+
+processes comment at beginning
+    c.process_line('#some comment') == '#some comment'
+    c.process_line('') == ''
