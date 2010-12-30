@@ -93,6 +93,9 @@ class SpecificationProcessor:
             self._long_comment_found = '=' in stripped_line
             just_found = True
 
+            if not self._long_comment_found:
+                return line
+
         if not just_found and self._long_comment_found:
             return line
 

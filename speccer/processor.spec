@@ -82,6 +82,6 @@ processes long string
     c.process_line("    expected = '''") == "        expected = '''"
     c.process_line('var a = 4;') == 'var a = 4;'
     c.process_line('var b = 5;') == 'var b = 5;'
-    c.process_line("'''") == "    '''"
+    c.process_line("'''") == "'''"
     c.process_line('') == ''
     c.process_line("    print('done')") == "        print('done')"
