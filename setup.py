@@ -16,7 +16,7 @@ setup(
     name = "speccer",
     version = version.get(),
     url = 'https://github.com/bebraw/speccer',
-    license = 'BSD',
+    license = 'MIT',
     description = description,
     long_description = long_description,
     author = speccer.__author__,
