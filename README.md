@@ -10,6 +10,7 @@ A module specification could look something like this:
 
 myclass.spec: (tests myclass.py)
 
+```python
     set up
         c = myclass.MyClass()
 
@@ -21,6 +22,7 @@ myclass.spec: (tests myclass.py)
 
     fails adding int and string
         c.add(10, 'foo') raises TypeError
+```
 
 It looks pretty much like any other test you may have seen before. The syntax may be a bit lighter, though. As a test author you can focus on the essential while writing the assertions. In addition it's a bit nicer to read this way.
 
