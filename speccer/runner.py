@@ -11,7 +11,8 @@ from optparse import OptionParser
 from processor import SpecificationProcessor
 from itertools import chain
 
-import version
+import __init__
+
 
 def get_base_name(a):
     return os.path.splitext(a)[0]
@@ -139,7 +140,7 @@ def looping_run(*args):
         time.sleep(1)
 
 def show_version(*args):
-    print("speccer %s" % version.get())
+    print("speccer %s" % __init__.__version__)
     sys.exit(0)
 
 def main():

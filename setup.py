@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import speccer
-from speccer import version
 from setuptools import setup
 
 description = "Specification based test runner."
@@ -14,7 +13,7 @@ except:
 
 setup(
     name = "speccer",
-    version = version.get(),
+    version = speccer.__version__,
     url = 'https://github.com/bebraw/speccer',
     license = 'MIT',
     description = description,
