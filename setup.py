@@ -1,14 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import subprocess
 import speccer
 from setuptools import setup
+
+def pandoc(source, from_format, to_format):
+    # http://osiux.com/html-to-restructured-text-in-python-using-pandoc
+    # raises OSError if pandoc is not found!
+    p = subprocess.Popen(['pandoc', '--from=' + from_format, '--to=' + to_format],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE
+        )
+    return p.communicate(source)[0]
 
 description = "Specification based test runner."
 cur_dir = os.path.dirname(__file__)
 try:
-    long_description = open(os.path.join(cur_dir, 'README.md')).read()
-except:
+    md = open(os.path.join(cur_dir, 'README.md')).read()
+
+    long_description = pandoc(md, 'markdown', 'rst')
+except (IOError, OSError):
+    print 'check that you have installed pandoc properly and that README.md exists!'
     long_description = description
 
 setup(
