@@ -109,7 +109,7 @@ def run_tests(spec_files):
 
         return False
     else:
-        print('\nRunning tests')
+        print('\nRunning specifications')
 
         run(spec_files)
 
