@@ -35,7 +35,7 @@ setup(
     install_requires = ['setuptools', ],
     entry_points="""
     [console_scripts]
-    speccer = speccer.runner:main
+    run_specs = speccer.runner:main
     """,
     classifiers=[
         'Development Status :: 4 - Beta',

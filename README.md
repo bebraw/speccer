@@ -2,7 +2,7 @@
 
 Speccer provides simple means to test individual modules. It uses a minimal, assert-free syntax. This syntax is compiled to actual code utilizing Python's unittest. Henceforth Speccer may be seen as an alternative to it in various situations.
 
-Run "setup.py install" to start rocking. See "demo" folder for an actual example. Once you have installed the tool just invoke "speccer" at that directory. You should see some test results. Feel free to tweak the files to give it a proper go.
+Run "setup.py install" to start rocking. See "demo" folder for an actual example. Once you have installed the tool just invoke "speccer" (run\_specs in dev version) at that directory. You should see some test results. Feel free to tweak the files to give it a proper go.
 
 ## Basic Specification Syntax
 
