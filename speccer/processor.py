@@ -22,44 +22,36 @@ class SpecificationProcessor:
         if len(filter(bool, map(strip, lines))) == 0:
             return ''
 
-        # check file beginning now (attach defs as is)
-        # this is a bit weak since it allows defs to be only at beginning
-        defs = map(lambda a: a.startswith('def'), lines)
+        # note that this assumes defs and assignments are at the beginning,
+        # possible set up next and actual tests after that
+        def first_test_index():
+            defs = map(lambda a: a.startswith('def'), lines)
+            last_def = defs[-1] if len(defs) else 0
 
-        def r_index(a, val):
-            # missing list.rindex...
-            return len(a) - a[::-1].index(val) - 1
+            for i, line in enumerate(lines[last_def + 1:]):
+                if len(line) and not line.startswith(' '):
+                    return last_def + 1 + i
 
-        first_index = 0
-        if any(defs):
-            last_def_index = r_index(defs, True)
+            return len(lines)
 
-            try:
-                first_index = map(lambda a: a.strip(), lines[last_def_index:]).index('')
-            except ValueError:
-                pass
+        i = first_test_index()
 
-            first_index += last_def_index
+        ret.extend(lines[:i])
 
-        processed_lines = map(lambda a: self.process_line(a), lines[:first_index])
+        new_lines, set_up = self.pick_set_up(lines[i:])
 
-        if len(processed_lines):
+        if len(new_lines):
             ret.extend(['import unittest', 'import ' + self.file_name])
-            
-            ret.extend(processed_lines)
 
             test_class_name = 'Test' + self.file_name.capitalize()
             ret.append('class ' + test_class_name + '(unittest.TestCase):')
 
-            new_lines, set_up = self.pick_set_up(lines[first_index:])
             ret.extend(filter(bool, map(partial(self.process_line, set_up=set_up), new_lines)))
 
             ret.extend(['suite = unittest.TestLoader().loadTestsFromTestCase(' + \
                 test_class_name + ')',
                 'unittest.TextTestRunner(verbosity=2).run(suite)'
             ])
-        else:
-            ret.extend(lines)
 
         return '\n'.join(ret)
 
