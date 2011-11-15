@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from functools import partial
 from indentation import Indentation
 from statement import Statements
 
@@ -40,11 +41,7 @@ class SpecificationProcessor:
 
         new_lines, set_up = self.pick_set_up(lines[first_index:])
 
-        for line in new_lines:
-            processed_line = self.process_line(line, set_up)
-            
-            if processed_line:
-                ret.append(processed_line)
+        ret.extend(filter(bool, map(partial(self.process_line, set_up=set_up), new_lines)))
         
         ret.extend(['suite = unittest.TestLoader().loadTestsFromTestCase(' + \
             test_class_name + ')',
