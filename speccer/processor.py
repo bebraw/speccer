@@ -17,7 +17,7 @@ class SpecificationProcessor:
         self._long_comment_found = False
 
     def process(self, lines):
-        ret = ['import unittest', 'import ' + self.file_name]
+        ret = []
 
         if len(filter(bool, map(strip, lines))) == 0:
             return ''
@@ -34,23 +34,33 @@ class SpecificationProcessor:
         if any(defs):
             last_def_index = r_index(defs, True)
 
-            first_index = map(lambda a: a.strip(), lines[last_def_index:]).index('')
+            try:
+                first_index = map(lambda a: a.strip(), lines[last_def_index:]).index('')
+            except ValueError:
+                pass
+
             first_index += last_def_index
 
         processed_lines = map(lambda a: self.process_line(a), lines[:first_index])
-        ret.extend(processed_lines)
+        processed_len = len(processed_lines)
+        
+        if processed_len:
+            ret.extend(['import unittest', 'import ' + self.file_name])
+            
+            ret.extend(processed_lines)
 
-        test_class_name = 'Test' + self.file_name.capitalize()
-        ret.append('class ' + test_class_name + '(unittest.TestCase):')
+            test_class_name = 'Test' + self.file_name.capitalize()
+            ret.append('class ' + test_class_name + '(unittest.TestCase):')
 
         new_lines, set_up = self.pick_set_up(lines[first_index:])
 
         ret.extend(filter(bool, map(partial(self.process_line, set_up=set_up), new_lines)))
-        
-        ret.extend(['suite = unittest.TestLoader().loadTestsFromTestCase(' + \
-            test_class_name + ')',
-            'unittest.TextTestRunner(verbosity=2).run(suite)'
-        ])
+
+        if processed_len:
+            ret.extend(['suite = unittest.TestLoader().loadTestsFromTestCase(' + \
+                test_class_name + ')',
+                'unittest.TextTestRunner(verbosity=2).run(suite)'
+            ])
 
         return '\n'.join(ret)
 

@@ -10,6 +10,9 @@ set up
 processes empty lines
     c.process(['', '']) == ''
 
+processes function with return
+    c.process(['def foo():', "return 'foo'"]) == "def foo():\nreturn 'foo'"
+
 skips def
     c.process_line('def foo():') == 'def foo():'
 
