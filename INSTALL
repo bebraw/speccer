@@ -1,3 +1,4 @@
 Just run setup.py ("python setup.py install"). In case you use a *nix platform, you might need to use sudo.
 
-After the installation has been done properly you should have access to "speccer" command. Just run "speccer" ("run\_specs" in dev version) and it will seek for spec files in the current directory and run them if found. Try to navigate to the main project folder (speccer) or demo and run the command there for some results. Run "speccer -h" for some extra info.
+After the installation has been done properly you should have access to "run\_specs" command. Just run it to seek for spec files in the current directory and run them if found. Try to navigate to the main project folder (speccer) or demo and run the command there for some results. Invoke "run\_specs -h" for some extra info.
+
