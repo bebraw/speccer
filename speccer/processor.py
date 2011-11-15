@@ -7,6 +7,16 @@ from statement import Statements
 def default_indentation():
     return 4 * ' '
 
+def first_test_index(lines):
+    def is_ok(i):
+        a = i[1]
+        return not any(map(a.startswith, ('def', ' ', '#'))) and ('=' not in a) and len(a) > 1
+
+    try:
+        return filter(is_ok, enumerate(lines))[0][0]
+    except IndexError:
+        return 0
+
 class SpecificationProcessor:
     def __init__(self, file_name):
         self.file_name = file_name
@@ -24,21 +34,8 @@ class SpecificationProcessor:
 
         # note that this assumes defs and assignments are at the beginning,
         # possible set up next and actual tests after that
-        def first_test_index():
-            defs = filter(lambda a: a[1].startswith('def'), enumerate(lines))
 
-            last_def = defs[-1][0] if len(defs) else -1
-            if last_def >= 0:
-                for i, line in enumerate(lines[last_def + 1:]):
-                    if len(line) > 0 and not line.startswith(' ') and '=' not in line:
-                        return last_def + 1 + i
-
-                return len(lines)
-
-            return 0
-
-        i = first_test_index()
-
+        i = first_test_index(lines)
         ret.extend(lines[:i])
 
         new_lines, set_up = self.pick_set_up(lines[i:])
