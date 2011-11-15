@@ -7,6 +7,9 @@ def process(c, line):
 set up
     c = processor.SpecificationProcessor('processor')
 
+processes empty lines
+    c.process(['', '']) == ''
+
 skips def
     c.process_line('def foo():') == 'def foo():'
 

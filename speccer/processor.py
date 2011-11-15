@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from functools import partial
+from string import strip
 from indentation import Indentation
 from statement import Statements
 
@@ -17,6 +18,9 @@ class SpecificationProcessor:
 
     def process(self, lines):
         ret = ['import unittest', 'import ' + self.file_name]
+
+        if len(filter(bool, map(strip, lines))) == 0:
+            return ''
 
         # check file beginning now (attach defs as is)
         # this is a bit weak since it allows defs to be only at beginning
