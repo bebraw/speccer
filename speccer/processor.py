@@ -30,7 +30,7 @@ class SpecificationProcessor:
             last_def = defs[-1][0] if len(defs) else -1
             if last_def >= 0:
                 for i, line in enumerate(lines[last_def + 1:]):
-                    if len(line) and not line.startswith(' '):
+                    if len(line) > 0 and not line.startswith(' ') and '=' not in line:
                         return last_def + 1 + i
 
                 return len(lines)

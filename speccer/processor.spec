@@ -1,6 +1,9 @@
 def prefix():
     return 8 * ' '
 
+# TODO: figure out why this cannot be after "process"
+function = ['def foo():', "    a = 4", "    return 'foo'"]
+
 def process(c, line):
     return c.process_line('    ' + line)
 
@@ -11,7 +14,7 @@ processes empty lines
     c.process(['', '']) == ''
 
 processes function with return
-    c.process(['def foo():', "    a = 4", "    return 'foo'"]) == "def foo():\n    a = 4\n    return 'foo'"
+    c.process(function) == "def foo():\n    a = 4\n    return 'foo'"
 
 skips def
     c.process_line('def foo():') == 'def foo():'
