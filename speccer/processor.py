@@ -25,14 +25,17 @@ class SpecificationProcessor:
         # note that this assumes defs and assignments are at the beginning,
         # possible set up next and actual tests after that
         def first_test_index():
-            defs = map(lambda a: a.startswith('def'), lines)
-            last_def = defs[-1] if len(defs) else 0
+            defs = filter(lambda a: a[1].startswith('def'), enumerate(lines))
 
-            for i, line in enumerate(lines[last_def + 1:]):
-                if len(line) and not line.startswith(' '):
-                    return last_def + 1 + i
+            last_def = defs[-1][0] if len(defs) else -1
+            if last_def >= 0:
+                for i, line in enumerate(lines[last_def + 1:]):
+                    if len(line) and not line.startswith(' '):
+                        return last_def + 1 + i
 
-            return len(lines)
+                return len(lines)
+
+            return 0
 
         i = first_test_index()
 
