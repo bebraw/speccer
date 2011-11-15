@@ -42,9 +42,8 @@ class SpecificationProcessor:
             first_index += last_def_index
 
         processed_lines = map(lambda a: self.process_line(a), lines[:first_index])
-        processed_len = len(processed_lines)
-        
-        if processed_len:
+
+        if len(processed_lines):
             ret.extend(['import unittest', 'import ' + self.file_name])
             
             ret.extend(processed_lines)
@@ -52,15 +51,15 @@ class SpecificationProcessor:
             test_class_name = 'Test' + self.file_name.capitalize()
             ret.append('class ' + test_class_name + '(unittest.TestCase):')
 
-        new_lines, set_up = self.pick_set_up(lines[first_index:])
+            new_lines, set_up = self.pick_set_up(lines[first_index:])
+            ret.extend(filter(bool, map(partial(self.process_line, set_up=set_up), new_lines)))
 
-        ret.extend(filter(bool, map(partial(self.process_line, set_up=set_up), new_lines)))
-
-        if processed_len:
             ret.extend(['suite = unittest.TestLoader().loadTestsFromTestCase(' + \
                 test_class_name + ')',
                 'unittest.TextTestRunner(verbosity=2).run(suite)'
             ])
+        else:
+            ret.extend(lines)
 
         return '\n'.join(ret)
 

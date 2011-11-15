@@ -11,7 +11,7 @@ processes empty lines
     c.process(['', '']) == ''
 
 processes function with return
-    c.process(['def foo():', "return 'foo'"]) == "def foo():\nreturn 'foo'"
+    c.process(['def foo():', "    a = 4", "    return 'foo'"]) == "def foo():\n    a = 4\n    return 'foo'"
 
 skips def
     c.process_line('def foo():') == 'def foo():'
