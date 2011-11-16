@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import subprocess
 import speccer
 from setuptools import setup
 
