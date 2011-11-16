@@ -41,3 +41,8 @@ Each specification contains a name and some actual code asserting something. I h
 * x < y < z, multiple inequalities (mix with equality as you want)
 
 These assertions map directly to ones available in Python's unittest module. If some of those seem weird to you, see http://docs.python.org/library/unittest.html .
+
+## License
+
+Speccer is available under MIT license. See LICENSE for more details.
+
