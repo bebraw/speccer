@@ -35,15 +35,15 @@ class SpecificationProcessor:
         # note that this assumes defs and assignments are at the beginning,
         # possible set up next and actual tests after that
 
+        ret.extend(['import unittest',
+            'try:\n    import ' + self.file_name + '\nexcept ImportError: pass'])
+
         i = first_test_index(lines)
         ret.extend(lines[:i])
 
         new_lines, set_up = self.pick_set_up(lines[i:])
 
         if len(new_lines):
-            ret.extend(['import unittest',
-                'try:\n    import ' + self.file_name + '\nexcept ImportError: pass'])
-
             test_class_name = 'Test' + self.file_name.capitalize()
             ret.append('class ' + test_class_name + '(unittest.TestCase):')
 
