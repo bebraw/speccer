@@ -22,7 +22,7 @@ def run(spec_files):
         base_name = get_base_name(spec_file_name)
         py_file_name = base_name + '.py'
 
-        if os.path.exists(py_file_name):
+        if True:
             print('\n**Testing ' + spec_file_name + '**\n')
 
             head, tail = os.path.split(base_name)

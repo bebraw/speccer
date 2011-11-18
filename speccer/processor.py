@@ -10,7 +10,7 @@ def default_indentation():
 def first_test_index(lines):
     def is_ok(i):
         a = i[1]
-        return not any(map(a.startswith, ('def', ' ', '#'))) and ('=' not in a) and len(a) > 1
+        return not any(map(a.startswith, ('def ', ' ', '#', 'from ', 'import ', 'print '))) and ('=' not in a) and len(a) > 1
 
     try:
         return filter(is_ok, enumerate(lines))[0][0]
@@ -41,7 +41,8 @@ class SpecificationProcessor:
         new_lines, set_up = self.pick_set_up(lines[i:])
 
         if len(new_lines):
-            ret.extend(['import unittest', 'import ' + self.file_name])
+            ret.extend(['import unittest',
+                'try:\n    import ' + self.file_name + '\nexcept ImportError: pass'])
 
             test_class_name = 'Test' + self.file_name.capitalize()
             ret.append('class ' + test_class_name + '(unittest.TestCase):')
