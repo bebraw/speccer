@@ -47,7 +47,7 @@ class SpecificationProcessor:
             test_class_name = 'Test' + self.file_name.capitalize()
             ret.append('class ' + test_class_name + '(unittest.TestCase):')
 
-            ret.extend(filter(bool, map(partial(self.process_line, set_up=set_up), new_lines)))
+            self.process_lines(new_lines, set_up)
 
             ret.extend(['suite = unittest.TestLoader().loadTestsFromTestCase(' + \
                 test_class_name + ')',
@@ -55,6 +55,9 @@ class SpecificationProcessor:
             ])
 
         return '\n'.join(ret)
+
+    def process_lines(self, lines, set_up=()):
+        return filter(book, map(partial(self.process_line, set_up=set_up), lines))
 
     def pick_set_up(self, lines):
         found_set_up = False

@@ -6,3 +6,15 @@ set up
 processes empty lines
     c.process(['', '']) == ''
 
+processes function
+    pass
+
+processes function and test
+    pass
+
+processes test
+    pass
+
+processes hoisting
+    pass
+
