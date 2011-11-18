@@ -211,6 +211,7 @@ folder they are in. Alternatively you may pass the tool the spec (ie.
                 os.chdir(arg)
                 sys.path.append(os.getcwd())
                 run_tests(get_specs())
+                sys.path.pop() # XXX: might fail if tested code manipulates sys.path...
                 os.chdir('..')
             else:
                 arg = arg if arg.endswith('.spec') else arg + '.spec'
