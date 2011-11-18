@@ -6,17 +6,8 @@ def prefix():
 def process(c, line):
     return c.process_line('    ' + line)
 
-function = ['def foo():', "    a = 4", "    return 'foo'"]
-
 set up
     c = processor.SpecificationProcessor('processor')
-
-processes empty lines
-    c.process(['', '']) == ''
-
-# TODO
-#processes function with return
-#    c.process(function) == "def foo():\n    a = 4\n    return 'foo'"
 
 skips def
     c.process_line('def foo():') == 'def foo():'
