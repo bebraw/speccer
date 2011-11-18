@@ -25,7 +25,12 @@ def run(spec_files):
         if os.path.exists(py_file_name):
             print('\n**Testing ' + spec_file_name + '**\n')
 
-            processor = SpecificationProcessor(base_name)
+            head, tail = os.path.split(base_name)
+
+            if head:
+                sys.path.append(os.path.join(os.getcwd(), head))
+
+            processor = SpecificationProcessor(tail)
 
             with open(spec_file_name) as f:
                 lines = f.readlines()
@@ -165,8 +170,7 @@ set up
 adds two and two
     c.add(2,2) == 4
 
-adds negatives
-    c.add(10, -10) == 0
+...
 
 fails adding int and string
     c.add(10, 'foo') raises TypeError
@@ -175,7 +179,10 @@ As you can see the syntax is quite light. It's pretty much like regular Python
 but with less noise. Asserts and function definitions are implicit.
 
 In order to run the tests, just run the tool without any parameters in the
-folder they are in."""
+folder they are in. Alternatively you may pass the tool the spec (ie.
+'foo.spec' or just 'foo') or directory containing tests.
+
+"""
 
     class MyParser(OptionParser):
         def format_epilog(self, formatter):
@@ -195,23 +202,21 @@ folder they are in."""
 
     options, args = parser.parse_args()
 
-    if len(sys.argv) < 2:
+    # note that we get here only if the parser did not match
+    if len(args) == 0:
         run_tests(get_specs())
-    elif len(args) > 0:
-        # TODO: make Python imports work with relative paths in order to enable this
-        # expand dir contents to args
-        #args = list(chain(*map(lambda a: map(lambda b: os.path.join(a, b), os.listdir(a)) if os.path.isdir(a) else a, args)))
+    else:
+        for arg in args:
+            if os.path.isdir(arg):
+                os.chdir(arg)
+                sys.path.append(os.getcwd())
+                run_tests(get_specs())
+                os.chdir('..')
+            else:
+                arg = arg if arg.endswith('.spec') else arg + '.spec'
 
-        # get rid of files end with other than .spec or not containing extension at all
-        args = filter(lambda a: a.endswith('.spec') or a.find('.') == -1, args)
-
-        # add .spec to files that don't have it yet
-        args = map(lambda a: a + '.spec' if not a.endswith('.spec') else a, args)
-
-        # make sure files really exist
-        args = filter(lambda a: os.path.exists(a), args)
-
-        run_tests(args)
+                if os.path.isfile(arg):
+                    run_tests([arg])
 
 if __name__ == '__main__':
     main()
