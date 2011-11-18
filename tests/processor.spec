@@ -1,3 +1,5 @@
+from speccer import processor
+
 def prefix():
     return 8 * ' '
 

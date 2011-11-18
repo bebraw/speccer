@@ -1,3 +1,5 @@
+from speccer import indentation
+
 renders indentation
     i = indentation.Indentation('    foobar')
     i() == '    '
