@@ -18,6 +18,7 @@ def process(c, filename):
     tests = [(a, b) for a, b in zip(expected, result) if a != b and a != '...']
 
     if len(tests):
+        print expected, result
         print '\n' + str(tests) + '\n'
 
 set up
@@ -38,6 +39,8 @@ processes test
 processes hoisting
     process(c, 'hoisting')
 
-# TODO: test assignment!
+processes assignment
+    process(c, 'assignment')
+
 # TODO: test long str at beginning of a func!
 
