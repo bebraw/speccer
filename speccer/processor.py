@@ -9,16 +9,6 @@ from utils import OrderedDict
 def default_indentation():
     return 4 * ' '
 
-def first_test_index(lines):
-    def is_ok(i):
-        a = i[1]
-        return not any(map(a.startswith, ('def ', ' ', '#', 'from ', 'import ', 'print '))) and ('=' not in a) and len(a) > 1
-
-    try:
-        return filter(is_ok, enumerate(lines))[0][0]
-    except IndexError:
-        return 0
-
 class SpecificationProcessor:
     def __init__(self, file_name):
         self.file_name = file_name
