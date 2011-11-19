@@ -42,6 +42,10 @@ Each specification contains a name and some actual code asserting something. I h
 
 These assertions map directly to ones available in Python's unittest module. If some of those seem weird to you, see http://docs.python.org/library/unittest.html .
 
+## Changelog
+
+* 0.7.5 - Made it possible to define functions between test definitions and made the runner more robust altogether. Now it's possible to separate tests to another directory. In addition it's possible to run tests simply by passing this directory to the runner (ie. run_specs tests).
+
 ## License
 
 Speccer is available under MIT license. See LICENSE for more details.
