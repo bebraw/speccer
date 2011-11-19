@@ -42,5 +42,6 @@ processes hoisting
 processes assignment
     process(c, 'assignment')
 
-# TODO: test long str at beginning of a func!
+processes long comment
+    process(c, 'long_comment')
 
