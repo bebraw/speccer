@@ -14,7 +14,6 @@ def process(c, filename):
     expected.extend(['...'] * 2)
 
     result = c.process(given).split('\n')
-    #print expected, result
 
     tests = [(a, b) for a, b in zip(expected, result) if a != b and a != '...']
 
@@ -38,4 +37,7 @@ processes test
 
 processes hoisting
     process(c, 'hoisting')
+
+# TODO: test assignment!
+# TODO: test long str at beginning of a func!
 

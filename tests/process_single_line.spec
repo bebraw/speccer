@@ -72,22 +72,6 @@ processes anything
     c.process_line('') == ''
     c.process_line('yet another test') == '\n    def test_yet_another_test(self):'
 
-processes test with Python
-    c.process_line('some test') == '\n    def test_some_test(self):'
-    c.process_line('    if True:') == '        if True:'
-    c.process_line("        print('works')") == "            print('works')"
-    c.process_line('') == ''
-    c.process_line("    print('end')") == "        print('end')"
-
-processes long string
-    c.process_line('some test') == '\n    def test_some_test(self):'
-    c.process_line("    expected = '''") == "        expected = '''"
-    c.process_line('var a = 4;') == 'var a = 4;'
-    c.process_line('var b = 5;') == 'var b = 5;'
-    c.process_line("'''") == "'''"
-    c.process_line('') == ''
-    c.process_line("    print('done')") == "        print('done')"
-
 processes comment at beginning
     c.process_line('#some comment') == '#some comment'
     c.process_line('') == ''

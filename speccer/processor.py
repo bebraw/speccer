@@ -3,6 +3,8 @@ from functools import partial
 from string import strip
 from indentation import Indentation
 from statement import Statements
+from utils import OrderedDict
+
 
 def default_indentation():
     return 4 * ' '
@@ -27,34 +29,92 @@ class SpecificationProcessor:
         self._long_comment_found = False
 
     def process(self, lines):
-        ret = []
-
         if len(filter(bool, map(strip, lines))) == 0:
             return ''
 
-        # note that this assumes defs and assignments are at the beginning,
-        # possible set up next and actual tests after that
+        blocks = self._parse_blocks(lines)
+
+        ret = []
 
         ret.extend(['import unittest',
             'try:\n    import ' + self.file_name + '\nexcept ImportError: pass'])
 
-        i = first_test_index(lines)
-        ret.extend(lines[:i])
+        ret.extend(blocks.imports)
 
-        new_lines, set_up = self.pick_set_up(lines[i:])
+        ret.extend(blocks.assignments)
+        ret.extend(blocks.defs)
 
-        if len(new_lines):
+        if blocks.tests:
             test_class_name = 'Test' + self.file_name.capitalize()
             ret.append('class ' + test_class_name + '(unittest.TestCase):')
 
-            ret.extend(self._process_lines(new_lines, set_up))
+            ret.extend(self._process_lines(blocks.tests, blocks.set_up[1:]))
 
-            ret.extend(['suite = unittest.TestLoader().loadTestsFromTestCase(' + \
+            ret.extend(['\nsuite = unittest.TestLoader().loadTestsFromTestCase(' + \
                 test_class_name + ')',
                 'unittest.TextTestRunner(verbosity=2).run(suite)'
             ])
 
         return '\n'.join(ret)
+
+    def _parse_blocks(self, lines):
+        class Blocks:
+            def __init__(self):
+                self.imports = []
+                self.assignments = []
+                self.defs = []
+                self.set_up = []
+                self.tests = []
+
+            def add(self, target, accum):
+                try:
+                    a = getattr(self, target)
+
+                    a.extend(accum)
+                except AttributeError:
+                    pass
+
+        blocks = Blocks()
+
+        def begins_with(name):
+            return lambda begin, line: begin == name
+
+        def exact(name):
+            return lambda begin, line: line.rstrip() == name
+
+        patterns = OrderedDict([
+            (begins_with('def'), 'defs'),
+            (begins_with('import'), 'imports'),
+            (begins_with('from'), 'imports'),
+            (exact('set up'), 'set_up'),
+            (lambda begin, line: begin and '=' in line and begin != ' ', 'assignments'),
+            (lambda begin, line: begin != ' ' and begin != '' and begin != '\n', 'tests'),
+        ])
+
+        def match(line):
+            begin = line.split(' ')[0]
+
+            for k, v in patterns.items():
+                if k(begin, line):
+                    return v
+
+        def accumulate(line):
+            matched = match(line)
+
+            if matched:
+                blocks.add(accumulate.target, accumulate.items)
+                accumulate.target = matched
+                accumulate.items = []
+
+            accumulate.items.append(line)
+
+        accumulate.target = ''
+        accumulate.items = []
+
+        map(accumulate, lines)
+        blocks.add(accumulate.target, accumulate.items)
+
+        return blocks
 
     def _process_lines(self, lines, set_up=()):
         return filter(bool, map(partial(self.process_line, set_up=set_up), lines))

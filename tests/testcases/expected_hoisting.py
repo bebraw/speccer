@@ -1,7 +1,8 @@
 def foo():
     pass
 
-class TestGiven_hoisting(unittest.TestCase):
+class TestProcessor(unittest.TestCase):
+
     def test_does_something(self):
         pass
 
