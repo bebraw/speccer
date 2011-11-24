@@ -60,6 +60,9 @@ processes in
 processes not in
     process(c, 'a not in [1, 2, 3]') == prefix() + 'self.assertNotIn(a, [1, 2, 3])'
 
+skips for in
+    process(c, 'for i in a:') == prefix() + 'for i in a:'
+
 processes empty line
     process(c, '    ') == ''
 

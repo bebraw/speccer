@@ -46,6 +46,9 @@ class In(Statement):
     value = ' in '
     code = 'assertIn'
 
+    def matches(self, line):
+        return not line.strip().startswith('for ') and self.value in line
+
 class NotIn(Statement):
     value = ' not in '
     code = 'assertNotIn'
