@@ -63,6 +63,24 @@ processes not in
 skips for in
     process(c, 'for i in a:') == prefix() + 'for i in a:'
 
+processes is
+    process(c, 'a is b') == prefix() + 'self.assertIs(a, b)'
+
+processes is not
+    process(c, 'a is not b') == prefix() + 'self.assertIsNot(a, b)'
+
+processes is None
+    process(c, 'a is None') == prefix() + 'self.assertIsNone(a)'
+
+processes is not None
+    process(c, 'a is not None') == prefix() + 'self.assertIsNotNone(a)'
+
+processes is instance
+    process(c, 'a is instanceof b') == prefix() + 'self.assertIsInstance(a, b)'
+
+processes is not instance
+    process(c, 'a is not instanceof b') == prefix() + 'self.assertNotIsInstance(a, b)'
+
 processes empty line
     process(c, '    ') == ''
 

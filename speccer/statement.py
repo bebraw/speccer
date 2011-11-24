@@ -16,7 +16,7 @@ class Statement:
         return 'self.' + self.code + '(' + code_params + ')'
 
     def _code_parameters(self, l_part, r_part):
-        return l_part + ', ' + r_part
+        return l_part + ', ' + r_part if r_part else l_part
 
 class Equals(Statement):
     value = '=='
@@ -53,6 +53,30 @@ class NotIn(Statement):
     value = ' not in '
     code = 'assertNotIn'
 
+class Is(Statement):
+    value = ' is '
+    code = 'assertIs'
+
+class IsNot(Statement):
+    value = ' is not '
+    code = 'assertIsNot'
+
+class IsNotNone(Statement):
+    value = ' is not None'
+    code = 'assertIsNotNone'
+
+class IsNone(Statement):
+    value = ' is None'
+    code = 'assertIsNone'
+
+class IsNotInstance(Statement):
+    value = ' is not instanceof '
+    code = 'assertNotIsInstance'
+
+class IsInstance(Statement):
+    value = ' is instanceof '
+    code = 'assertIsInstance'
+
 class Inequality(Statement):
     code = 'assertTrue'
 
@@ -86,7 +110,9 @@ class Statements(list):
         statements = (Equals(), NotEquals(), AlmostNotEquals(),
             AlmostEquals(), BiggerThanOrEquals(), BiggerThan(),
             SmallerThanEquals(), SmallerThan(), Raises(),
-            NotIn(), In(), Any(), )
+            IsNotInstance(), IsInstance(),
+            NotIn(), In(), IsNotNone(), IsNone(),
+            IsNot(), Is(), Any(), )
 
         super(Statements, self).__init__(statements)
 
