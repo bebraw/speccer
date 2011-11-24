@@ -39,6 +39,8 @@ Each specification contains a name and some actual code asserting something. I h
 * <, smaller than
 * <=, smaller than or equal
 * x < y < z, multiple inequalities (mix with equality as you want)
+* in
+* not in
 
 These assertions map directly to ones available in Python's unittest module. If some of those seem weird to you, see http://docs.python.org/library/unittest.html .
 

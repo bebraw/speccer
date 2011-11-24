@@ -18,6 +18,9 @@ skips return
 processes declaration
     c.process_line('process this  ') == '\n    ' + 'def test_process_this(self):'
 
+chomps apostrophe
+    c.process_line("can't touch this") == '\n    ' + 'def test_cant_touch_this(self):'
+
 processes indentation
     process(c, 'a = 5') == prefix() + 'a = 5'
 
