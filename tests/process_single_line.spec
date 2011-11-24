@@ -51,6 +51,12 @@ processes multiple inqualities
     process(c, '4 < b <= 10') == prefix() + 'self.assertTrue(4 < b <= 10)'
     process(c, '4 <= b <= 10') == prefix() + 'self.assertTrue(4 <= b <= 10)'
 
+processes in
+    process(c, 'a in [1, 2, 3]') == prefix() + 'self.assertIn(a, [1, 2, 3])'
+
+processes not in
+    process(c, 'a not in [1, 2, 3]') == prefix() + 'self.assertNotIn(a, [1, 2, 3])'
+
 processes empty line
     process(c, '    ') == ''
 

@@ -42,6 +42,14 @@ class Raises(Statement):
 
         return ['try:' + expr, 'except' + error + ': pass']
 
+class In(Statement):
+    value = ' in '
+    code = 'assertIn'
+
+class NotIn(Statement):
+    value = ' not in '
+    code = 'assertNotIn'
+
 class Inequality(Statement):
     code = 'assertTrue'
 
@@ -74,7 +82,8 @@ class Statements(list):
     def __init__(self):
         statements = (Equals(), NotEquals(), AlmostNotEquals(),
             AlmostEquals(), BiggerThanOrEquals(), BiggerThan(),
-            SmallerThanEquals(), SmallerThan(), Raises(), Any())
+            SmallerThanEquals(), SmallerThan(), Raises(),
+            NotIn(), In(), Any(), )
 
         super(Statements, self).__init__(statements)
 
