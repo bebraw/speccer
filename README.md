@@ -4,6 +4,8 @@ Speccer provides simple means to test individual modules. It uses a minimal, ass
 
 Run "setup.py install" to start rocking. See "demo" folder for an actual example. Once you have installed the tool just invoke "run\_specs" at that directory. You should see some test results. Feel free to tweak the files to give it a proper go.
 
+Note that speccer uses functionality provided by Python 2.7's unittest (new asserts). If you want to use it with an older version of Python, please install [unittest2](http://pypi.python.org/pypi/unittest2/) first.
+
 ## Basic Specification Syntax
 
 A module specification could look something like this:
