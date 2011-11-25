@@ -36,23 +36,23 @@ processes almost equals
 processes not almost equals
     process(c, 'b !~= 10') == prefix() + 'self.assertNotAlmostEqual(b, 10)'
 
-processes bigger than
-    process(c, 'b > 5') == prefix() + 'self.assertTrue(b > 5)'
+processes greater than
+    process(c, 'b > 5') == prefix() + 'self.assertGreater(b, 5)'
 
-processes bigger than or equals
-    process(c, 'b >= 5') == prefix() + 'self.assertTrue(b >= 5)'
+processes greater than or equals
+    process(c, 'b >= 5') == prefix() + 'self.assertGreaterEqual(b, 5)'
 
-processes smaller than
-    process(c, 'b < 5') == prefix() + 'self.assertTrue(b < 5)'
+processes less than
+    process(c, 'b < 5') == prefix() + 'self.assertLess(b, 5)'
 
-processes smaller than or equals
-    process(c, 'b <= 5') == prefix() + 'self.assertTrue(b <= 5)'
+processes less than or equals
+    process(c, 'b <= 5') == prefix() + 'self.assertLessEqual(b, 5)'
 
-processes multiple inqualities
-    process(c, '4 < b < 10') == prefix() + 'self.assertTrue(4 < b < 10)'
-    process(c, '4 <= b < 10') == prefix() + 'self.assertTrue(4 <= b < 10)'
-    process(c, '4 < b <= 10') == prefix() + 'self.assertTrue(4 < b <= 10)'
-    process(c, '4 <= b <= 10') == prefix() + 'self.assertTrue(4 <= b <= 10)'
+processes multiple lesser inequalities
+    process(c, '4 < b <= 10') == prefix() + 'self.assertLess(4, b);self.assertLessEqual(b, 10);'
+
+processes multiple greater inequalities
+    process(c, '4 >= b > 10') == prefix() + 'self.assertGreaterEqual(4, b);self.assertGreater(b, 10);'
 
 processes in
     process(c, 'a in [1, 2, 3]') == prefix() + 'self.assertIn(a, [1, 2, 3])'

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from string import strip
+
+
 class Statement:
     def matches(self, line):
         return self.value in line
@@ -77,26 +80,51 @@ class IsInstance(Statement):
     value = ' is instanceof '
     code = 'assertIsInstance'
 
-class Inequality(Statement):
-    code = 'assertTrue'
+def _convert(line, split_char, assertion):
+    parts = map(strip, line.split(split_char))
+    ret = ''
 
-    def _code_parameters(self, l_part, r_part):
-        l_parts = l_part.split(self.value)
+    for l, r in zip(parts, parts[1:]):
+        l = l.strip('=').strip()
+        op = assertion
+ 
+        if r.startswith('='):
+            op += 'Equal'
+            r = r.strip('=').strip()
 
-        return (' ' + self.value + ' ').join(l_parts) + ' ' + self.value + \
-            ' ' + r_part
+        ret += 'self.assert' + op + '(' + l + ', ' + r + ');'
 
-class BiggerThan(Inequality):
+    return ret
+
+class MultipleGreater(Statement):
+    def matches(self, line):
+        return bool(line.count('>') > 1)
+
+    def convert(self, line):
+        return _convert(line, '>', 'Greater')
+
+class MultipleLesser(Statement):
+    def matches(self, line):
+        return bool(line.count('<') > 1)
+
+    def convert(self, line):
+        return _convert(line, '<', 'Less')
+
+class GreaterThan(Statement):
     value = '>'
+    code = 'assertGreater'
 
-class BiggerThanOrEquals(Inequality):
+class GreaterThanOrEquals(Statement):
     value = '>='
+    code = 'assertGreaterEqual'
 
-class SmallerThan(Inequality):
+class LessThan(Statement):
     value = '<'
+    code = 'assertLess'
 
-class SmallerThanEquals(Inequality):
+class LessThanEquals(Statement):
     value = '<='
+    code = 'assertLessEqual'
 
 class Any(Statement):
     def matches(self, line):
@@ -108,8 +136,10 @@ class Any(Statement):
 class Statements(list):
     def __init__(self):
         statements = (Equals(), NotEquals(), AlmostNotEquals(),
-            AlmostEquals(), BiggerThanOrEquals(), BiggerThan(),
-            SmallerThanEquals(), SmallerThan(), Raises(),
+            AlmostEquals(),
+            MultipleGreater(), MultipleLesser(),
+            GreaterThanOrEquals(), GreaterThan(),
+            LessThanEquals(), LessThan(), Raises(),
             IsNotInstance(), IsInstance(),
             NotIn(), In(), IsNotNone(), IsNone(),
             IsNot(), Is(), Any(), )
