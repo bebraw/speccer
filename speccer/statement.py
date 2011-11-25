@@ -7,16 +7,10 @@ class Statement:
         return self.value in line
 
     def convert(self, line):
-        parts = line.split(self.value)
-        parts = [part.strip() for part in parts]
-        parts_len = len(parts)
-        parts_lim = int(round(parts_len / 2.0))
+        l, op, r = line.rpartition(self.value)
+        params = ', '.join(map(strip, (l, r))).rstrip().rstrip(',')
 
-        l_part = self.value.join(parts[0:parts_lim])
-        r_part = self.value.join(parts[parts_lim:parts_len])
-
-        code_params = self._code_parameters(l_part, r_part)
-        return 'self.' + self.code + '(' + code_params + ')'
+        return 'self.' + self.code + '(' + params + ')'
 
     def _code_parameters(self, l_part, r_part):
         return l_part + ', ' + r_part if r_part else l_part
