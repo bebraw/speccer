@@ -1,80 +1,10 @@
 # -*- coding: utf-8 -*-
+from functools import partial
 from string import strip
+from utils import OrderedDict
 
 
-class Statement:
-    def matches(self, line):
-        return self.value in line
-
-    def convert(self, line):
-        l, op, r = line.rpartition(self.value)
-        params = ', '.join(map(strip, (l, r))).rstrip().rstrip(',')
-
-        return 'self.' + self.code + '(' + params + ')'
-
-    def _code_parameters(self, l_part, r_part):
-        return l_part + ', ' + r_part if r_part else l_part
-
-class Equals(Statement):
-    value = '=='
-    code = 'assertEqual'
-
-class NotEquals(Statement):
-    value = '!='
-    code = 'assertNotEqual'
-
-class AlmostEquals(Statement):
-    value = '~='
-    code = 'assertAlmostEqual'
-
-class AlmostNotEquals(Statement):
-    value = '!~='
-    code = 'assertNotAlmostEqual'
-
-class Raises(Statement):
-    value = 'raises'
-
-    def convert(self, line):
-        expr, error = line.split('raises')
-
-        return ['try:' + expr, 'except' + error + ': pass']
-
-class In(Statement):
-    value = ' in '
-    code = 'assertIn'
-
-    def matches(self, line):
-        return not line.strip().startswith('for ') and self.value in line
-
-class NotIn(Statement):
-    value = ' not in '
-    code = 'assertNotIn'
-
-class Is(Statement):
-    value = ' is '
-    code = 'assertIs'
-
-class IsNot(Statement):
-    value = ' is not '
-    code = 'assertIsNot'
-
-class IsNotNone(Statement):
-    value = ' is not None'
-    code = 'assertIsNotNone'
-
-class IsNone(Statement):
-    value = ' is None'
-    code = 'assertIsNone'
-
-class IsNotInstance(Statement):
-    value = ' is not instanceof '
-    code = 'assertNotIsInstance'
-
-class IsInstance(Statement):
-    value = ' is instanceof '
-    code = 'assertIsInstance'
-
-def _convert(line, split_char, assertion):
+def _convert(split_char, assertion, line):
     parts = map(strip, line.split(split_char))
     ret = ''
 
@@ -90,57 +20,48 @@ def _convert(line, split_char, assertion):
 
     return ret
 
-class MultipleGreater(Statement):
-    def matches(self, line):
-        return bool(line.count('>') > 1)
+def convert(line):
+    s = OrderedDict([
+        ('==', 'Equal'),
+        ('!=', 'NotEqual'),
+        ('!~=', 'NotAlmostEqual'),
+        ('~=', 'AlmostEqual'),
+        (lambda line: bool(line.count('>') > 1), partial(_convert, '>', 'Greater')),
+        (lambda line: bool(line.count('<') > 1), partial(_convert, '<', 'Less')),
+        ('>=', 'GreaterEqual'),
+        ('<=', 'LessEqual'),
+        ('>', 'Greater'),
+        ('<', 'Less'),
+        ('raises', lambda line: ['try:' + line.split('raises')[0], 'except' + line.split('raises')[1] + ': pass']),
+        (' is not instanceof ', 'NotIsInstance'),
+        (' is instanceof ', 'IsInstance'),
+        ('for ', lambda line: line),
+        (' not in ', 'NotIn'),
+        (' in ', 'In'),
+        (' is not None', 'IsNotNone'),
+        (' is None', 'IsNone'),
+        (' is not ', 'IsNot'),
+        (' is ', 'Is'),
+    ])
 
-    def convert(self, line):
-        return _convert(line, '>', 'Greater')
+    def to_lambda(i):
+        def to_code(k, v, line):
+            l, op, r = line.rpartition(k)
+            params = ', '.join(map(strip, (l, r))).rstrip().rstrip(',')
 
-class MultipleLesser(Statement):
-    def matches(self, line):
-        return bool(line.count('<') > 1)
+            return 'self.assert' + v + '(' + params + ')'
 
-    def convert(self, line):
-        return _convert(line, '<', 'Less')
+        k, v = i
+        new_v = v if callable(v) else partial(to_code, k, v)
 
-class GreaterThan(Statement):
-    value = '>'
-    code = 'assertGreater'
+        del s[k]
 
-class GreaterThanOrEquals(Statement):
-    value = '>='
-    code = 'assertGreaterEqual'
+        if callable(k):
+            s[k] = new_v
+        else:
+            s[lambda line: k in line] = new_v
+    
+    map(to_lambda, s.items())
+    matches = filter(lambda k: k(line), s.keys())
+    return s[matches[0]](line) if len(matches) else line
 
-class LessThan(Statement):
-    value = '<'
-    code = 'assertLess'
-
-class LessThanEquals(Statement):
-    value = '<='
-    code = 'assertLessEqual'
-
-class Any(Statement):
-    def matches(self, line):
-        return True
-
-    def convert(self, line):
-        return line
-
-class Statements(list):
-    def __init__(self):
-        statements = (Equals(), NotEquals(), AlmostNotEquals(),
-            AlmostEquals(),
-            MultipleGreater(), MultipleLesser(),
-            GreaterThanOrEquals(), GreaterThan(),
-            LessThanEquals(), LessThan(), Raises(),
-            IsNotInstance(), IsInstance(),
-            NotIn(), In(), IsNotNone(), IsNone(),
-            IsNot(), Is(), Any(), )
-
-        super(Statements, self).__init__(statements)
-
-    def convert(self, line):
-        for statement in self:
-            if statement.matches(line):
-                return statement.convert(line)

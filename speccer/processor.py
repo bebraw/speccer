@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+import statement
 from functools import partial
 from string import strip
 from indentation import Indentation
-from statement import Statements
 from utils import OrderedDict
 
 
@@ -12,8 +12,6 @@ def default_indentation():
 class SpecificationProcessor:
     def __init__(self, file_name):
         self.file_name = file_name
-
-        self._statements = Statements()
 
         self._test_found = False
         self._long_comment_found = False
@@ -157,7 +155,7 @@ class SpecificationProcessor:
 
         if line and line[0] == ' ':
             indentation = Indentation(line)
-            ret = self._statements.convert(stripped_line)
+            ret = statement.convert(stripped_line)
 
             if hasattr(ret, '__iter__'):
                 return default_indentation() + indentation() + ret[0] + \
