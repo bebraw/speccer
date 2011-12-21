@@ -92,7 +92,7 @@ processes comment
     c.process_line('    # my comment') == '    # my comment'
 
 processes raises
-    process(c, 'a raises TypeError') == prefix() + 'try:a \n        except TypeError: pass'
+    process(c, 'a raises TypeError') == prefix() + 'with self.assertRaises(TypeError):\n' + prefix() + '    a'
 
 processes anything
     c.process_line('some test') == '\n    def test_some_test(self):'

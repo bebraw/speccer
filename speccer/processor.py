@@ -158,8 +158,7 @@ class SpecificationProcessor:
             ret = statement.convert(stripped_line)
 
             if hasattr(ret, '__iter__'):
-                return default_indentation() + indentation() + ret[0] + \
-                    '\n' + default_indentation() + indentation() + ret[1]
+                return '\n'.join(map(lambda a: default_indentation() + indentation() + a, ret))
 
             return (default_indentation() + indentation() + ret).rstrip()
 

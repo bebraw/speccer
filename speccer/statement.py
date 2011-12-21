@@ -32,7 +32,7 @@ def convert(line):
         ('<=', 'LessEqual'),
         ('>', 'Greater'),
         ('<', 'Less'),
-        ('raises', lambda line: ['try:' + line.split('raises')[0], 'except' + line.split('raises')[1] + ': pass']),
+        ('raises', lambda line: ['with self.assertRaises(' + line.split('raises')[1].strip() + '):', '    ' + line.split('raises')[0].strip()]),
         (' is not instanceof ', 'NotIsInstance'),
         (' is instanceof ', 'IsInstance'),
         ('for ', lambda line: line),
