@@ -102,6 +102,9 @@ processes anything
     c.process_line('') == ''
     c.process_line('yet another test') == '\n    def test_yet_another_test(self):'
 
+processes comma
+    c.process_line("some, some") == '\n    def test_some__some(self):'
+
 processes comment at beginning
     c.process_line('#some comment') == '#some comment'
     c.process_line('') == ''

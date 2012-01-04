@@ -166,7 +166,7 @@ class SpecificationProcessor:
             self._test_found = True
 
             ret = '\n' + default_indentation() + 'def test_' + \
-                stripped_line.replace(' ', '_').replace("'", '') + '(self):'
+                stripped_line.replace(' ', '_').replace("'", '').replace(',', '_') + '(self):'
 
             for content in set_up:
                 ret += '\n' + default_indentation() + content
