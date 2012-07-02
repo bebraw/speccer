@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Speccer : Specification based test runner for Python (MIT)" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Speccer</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/bebraw/speccer">View on GitHub</a>
+
+          <h1 id="project_title">Speccer</h1>
+          <h2 id="project_tagline">Specification based test runner for Python (MIT)</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/bebraw/speccer/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/bebraw/speccer/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Speccer - Specification based test runner for Python</h1>
+
+<p>Speccer provides simple means to test individual modules. It uses a minimal, assert-free syntax. This syntax is compiled to actual code utilizing Python's unittest. Henceforth Speccer may be seen as an alternative to it in various situations.</p>
+
+<p>Run "setup.py install" to start rocking. See "demo" folder for an actual example. Once you have installed the tool just invoke "run_specs" at that directory. You should see some test results. Feel free to tweak the files to give it a proper go.</p>
+
+<p>Note that speccer uses functionality provided by Python 2.7's unittest (new asserts). If you want to use it with an older version of Python, please install <a href="http://pypi.python.org/pypi/unittest2/">unittest2</a> first.</p>
+
+<p>You might also want to check out the <a href="http://www.slideshare.net/bebraw/speccer">presentation</a>.</p>
+
+<h2>Basic Specification Syntax</h2>
+
+<p>A module specification could look something like this:</p>
+
+<p>myclass.spec: (tests myclass.py)</p>
+
+<pre><code>set up
+    c = myclass.MyClass()
+
+adds two and two
+    c.add(2,2) == 4
+
+adds negatives
+    c.add(10, -10) == 0
+
+fails adding int and string
+    c.add(10, 'foo') raises TypeError
+</code></pre>
+
+<p>It looks pretty much like any other test you may have seen before. The syntax may be a bit lighter, though. As a test author you can focus on the essential while writing the assertions. In addition it's a bit nicer to read this way.</p>
+
+<p>Note that it's possible to mix regular Python code within the tests. This might not work in all cases, though, and should be reported.</p>
+
+<p>"set up" is a predefined test method that is run before each specification. This way you can set up some objects that are available for each test.</p>
+
+<p>Each specification contains a name and some actual code asserting something. I have listed available assertions below:</p>
+
+<ul>
+<li>==, is equal</li>
+<li>!=, is not equal</li>
+<li>~=, is almost equal</li>
+<li>!~=, is not almost equal</li>
+<li>&gt;, bigger than</li>
+<li>&gt;=, bigger than or equal</li>
+<li>&lt;, smaller than</li>
+<li>&lt;=, smaller than or equal</li>
+<li>x &lt; y &lt; z, multiple inequalities (mix with equality as you want)</li>
+<li>in</li>
+<li>not in</li>
+</ul><p>These assertions map directly to ones available in Python's unittest module. If some of those seem weird to you, see <a href="http://docs.python.org/library/unittest.html">http://docs.python.org/library/unittest.html</a> .</p>
+
+<h2>Changelog</h2>
+
+<ul>
+<li>0.7.5 - Made it possible to define functions between test definitions and made the runner more robust altogether. Now it's possible to separate tests to another directory. In addition it's possible to run tests simply by passing this directory to the runner (ie. run_specs tests).</li>
+</ul><h2>License</h2>
+
+<p>Speccer is available under MIT license. See LICENSE for more details.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Speccer maintained by <a href="https://github.com/bebraw">bebraw</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
