@@ -53,8 +53,9 @@ def run(spec_files):
         os.unlink(tmp_file.name + 'c')
 
 
-def get_specs():
-    return glob.glob('*.spec')
+def get_specs(path=None):
+    path = path or os.getcwd()
+    return glob.glob(os.path.join(path, '*.spec'))
 
 
 def output_tests(option, opt, output_dir, parser):
@@ -214,13 +215,7 @@ folder they are in. Alternatively you may pass the tool the spec (ie.
     else:
         for arg in args:
             if os.path.isdir(arg):
-                os.chdir(arg)
-                sys.path.append(os.getcwd())
-                run_tests(get_specs())
-                sys.path.pop()
-                # sys.path.pop XXX: might fail if tested code manipulates
-                # sys.path...
-                os.chdir('..')
+                run_tests(get_specs(arg))
             else:
                 arg = arg if arg.endswith('.spec') else arg + '.spec'
 
