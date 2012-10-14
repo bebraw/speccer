@@ -9,7 +9,6 @@ import tempfile
 import time
 from optparse import OptionParser
 from processor import SpecificationProcessor
-from itertools import chain
 
 import __init__
 
@@ -17,45 +16,46 @@ import __init__
 def get_base_name(a):
     return os.path.splitext(a)[0]
 
+
 def run(spec_files):
     for spec_file_name in spec_files:
         base_name = get_base_name(spec_file_name)
-        py_file_name = base_name + '.py'
 
-        if True:
-            print('\n**Testing ' + spec_file_name + '**\n')
+        print('\n**Testing ' + spec_file_name + '**\n')
 
-            head, tail = os.path.split(base_name)
+        head, tail = os.path.split(base_name)
 
-            if head:
-                sys.path.append(os.path.join(os.getcwd(), head))
+        if head:
+            sys.path.append(os.path.join(os.getcwd(), head))
 
-            processor = SpecificationProcessor(tail)
+        processor = SpecificationProcessor(tail)
 
-            with open(spec_file_name) as f:
-                lines = f.readlines()
+        with open(spec_file_name) as f:
+            lines = f.readlines()
 
-            spec_code = processor.process(lines)
+        spec_code = processor.process(lines)
 
-            # http://docs.python.org/library/tempfile.html#tempfile.mktemp
-            tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.py')
-            tmp_file.write(spec_code)
-            tmp_file.close()
+        # http://docs.python.org/library/tempfile.html#tempfile.mktemp
+        tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.py')
+        tmp_file.write(spec_code)
+        tmp_file.close()
 
+        try:
             try:
-                try:
-                    module = imp.load_source('spec', tmp_file.name)
-                except SystemExit:
-                    print('Module ' + base_name + ' not found!');
-            except Exception, e:
-                os.unlink(tmp_file.name)
-                sys.exit(str(e))
-
+                imp.load_source('spec', tmp_file.name)
+            except SystemExit:
+                print('Module ' + base_name + ' not found!')
+        except Exception, e:
             os.unlink(tmp_file.name)
-            os.unlink(tmp_file.name + 'c')
+            sys.exit(str(e))
+
+        os.unlink(tmp_file.name)
+        os.unlink(tmp_file.name + 'c')
+
 
 def get_specs():
     return glob.glob('*.spec')
+
 
 def output_tests(option, opt, output_dir, parser):
     got_all = False
@@ -96,8 +96,9 @@ def output_tests(option, opt, output_dir, parser):
                 if got_all:
                     answer = 'Y'
                 else:
-                    answer = raw_input('Are you sure you want to override file (' +
-                        py_file_name + ')?\n' + opts + '\n')
+                    answer = raw_input(
+                            'Are you sure you want to override file (' +
+                            py_file_name + ')?\n' + opts + '\n')
                     answer = answer.upper()
 
                     if answer == 'A':
@@ -107,6 +108,7 @@ def output_tests(option, opt, output_dir, parser):
             possible_answers[answer]()
         else:
             write_file()
+
 
 def run_tests(spec_files):
     if len(spec_files) == 0:
@@ -119,6 +121,7 @@ def run_tests(spec_files):
         run(spec_files)
 
         return True
+
 
 def looping_run(*args):
     def get_file_times(filenames):
@@ -144,9 +147,11 @@ def looping_run(*args):
 
         time.sleep(1)
 
+
 def show_version(*args):
     print("speccer %s" % __init__.__version__)
     sys.exit(0)
+
 
 def main():
     # make sure current working directory is in the path
@@ -194,7 +199,8 @@ folder they are in. Alternatively you may pass the tool the spec (ie.
         help="show program's version number and exit")
     parser.add_option("-l", "--loop", action="callback",
         callback=looping_run,
-        help="run tests in a looping manner. Tests get run each time a spec file is changed")
+        help="run tests in a looping manner. " + \
+                "Tests get run each time a spec file is changed")
     parser.add_option("-o", "--output", action="callback",
         dest="output_folder", type="string",
         callback=output_tests,
@@ -211,7 +217,9 @@ folder they are in. Alternatively you may pass the tool the spec (ie.
                 os.chdir(arg)
                 sys.path.append(os.getcwd())
                 run_tests(get_specs())
-                sys.path.pop() # XXX: might fail if tested code manipulates sys.path...
+                sys.path.pop()
+                # sys.path.pop XXX: might fail if tested code manipulates
+                # sys.path...
                 os.chdir('..')
             else:
                 arg = arg if arg.endswith('.spec') else arg + '.spec'
