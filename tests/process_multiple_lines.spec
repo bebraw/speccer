@@ -45,3 +45,6 @@ processes assignment
 processes long comment
     process(c, 'long_comment')
 
+processes import
+    process(c, 'import')
+
